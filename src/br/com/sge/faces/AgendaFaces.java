@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import br.com.sge.model.Agenda;
+import br.com.sge.model.Cliente;
 import br.com.sge.model.Contrato;
 import br.com.sge.model.Equipamento;
 import br.com.sge.model.Medicao;
@@ -20,6 +21,7 @@ import br.com.topsys.util.TSUtil;
 @ManagedBean(name = "agendaFaces")
 public class AgendaFaces extends CrudFaces<Agenda> {
 
+	private List<SelectItem> comboClientes;
 	private List<SelectItem> comboContratos;
 	private List<SelectItem> comboTiposServicos;
 	private List<SelectItem> comboOperadores;
@@ -31,7 +33,7 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 	protected void init() {
 		this.clearFields();
 		this.comboTiposServicos = super.initCombo(new TipoServico().findByModel("descricao"), "id", "descricao");
-		this.comboContratos = super.initCombo(new Contrato(Boolean.TRUE).findByModel("descricao"), "id", "descricao");
+		this.comboClientes = super.initCombo(new Cliente(Boolean.TRUE).findByModel("nome"), "id", "nome");
 		this.comboOperadores = super.initCombo(new Operador(Boolean.TRUE).findByModel("nome"), "id", "nome");
 		this.comboEquipamentos = super.initCombo(new Equipamento(Boolean.TRUE).findByModel("descricao"), "id", "descricao");
 		setFieldOrdem("dataInicial");
@@ -40,7 +42,7 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 	@Override
 	public String limpar() {
 		super.limpar();
-		getCrudModel().setTipoServico(new TipoServico(1L).getById());
+		getCrudModel().setTipoServico(new TipoServico());
 		getCrudModel().setContrato(new Contrato());
 		getCrudModel().setOperador(new Operador());
 		getCrudModel().setEquipamento(new Equipamento());
@@ -52,7 +54,7 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 	@Override
 	public String limparPesquisa() {
 		super.limparPesquisa();
-		getCrudPesquisaModel().setTipoServico(new TipoServico(1L).getById());
+		getCrudPesquisaModel().setTipoServico(new TipoServico());
 		getCrudPesquisaModel().setContrato(new Contrato());
 		getCrudPesquisaModel().setOperador(new Operador());
 		getCrudPesquisaModel().setEquipamento(new Equipamento());
@@ -74,6 +76,10 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 			getCrudModel().setOperador(new Operador());
 		}
 
+	}
+	
+	public void atualizarContratos() {
+		getCrudModel().getContrato().getCliente().setContratos(getCrudModel().getContrato().findByModel("descricao"));
 	}
 
 	public void atualizarTipoServico() {
@@ -134,6 +140,14 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 
 	public void setMedicaoSelecionada(Medicao medicaoSelecionada) {
 		this.medicaoSelecionada = medicaoSelecionada;
+	}
+
+	public List<SelectItem> getComboClientes() {
+		return comboClientes;
+	}
+
+	public void setComboClientes(List<SelectItem> comboClientes) {
+		this.comboClientes = comboClientes;
 	}
 
 }

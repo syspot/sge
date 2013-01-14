@@ -87,6 +87,13 @@ public class Contrato extends TSActiveRecordAb<Contrato>  {
 	public void setDataContrato(Date dataContrato) {
 		this.dataContrato = dataContrato;
 	}
+	
+	public String getDescricaoTotal() {
+		StringBuilder sb = new StringBuilder(this.getCliente().getNome().toUpperCase() + ": ");
+		sb.append(this.getDescricao());
+		
+		return sb.toString();
+	}
 
 	@Override
 	public int hashCode() {

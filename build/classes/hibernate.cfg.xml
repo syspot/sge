@@ -26,6 +26,7 @@
 		<mapping class="br.com.sge.model.Operador" />
 		<mapping class="br.com.sge.model.TipoEquipamento" />
 		<mapping class="br.com.sge.model.TipoIdentificador" />
+		<mapping class="br.com.sge.model.TipoServico" />
 		<mapping class="br.com.sge.model.Cliente" />
 		<mapping class="br.com.sge.model.Contrato" />
 		<mapping class="br.com.sge.model.Fornecedor" />

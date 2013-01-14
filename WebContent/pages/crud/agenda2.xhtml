@@ -8,30 +8,26 @@
 
 		<h:panelGrid columns="1" style="width:95%">
 
-			<h:panelGrid columns="3" columnClasses="coluna15, coluna40, coluna45" style="width: 100%">
+			<h:panelGrid columns="3" columnClasses="coluna15, coluna45, coluna40" style="width: 100%">
 
 				<p:outputLabel for="tipoServico" value="Tipo do Serviço" />
-				<p:outputLabel for="cliente" value="Cliente" />
 				<p:outputLabel for="contrato" value="Contrato" />
+				<p:outputLabel for="cliente" value="Cliente" />
 
 				<p:selectOneMenu id="tipoServico" value="#{mbeanModel.tipoServico.id}" required="true" requiredMessage="Tipo do Serviço: Campo obrigatório" style="width:95%">
 					<f:selectItems value="#{mbean.comboTiposServicos}" />
 				</p:selectOneMenu>
 
-				<p:selectOneMenu id="cliente" value="#{mbeanModel.contrato.cliente.id}" required="true" requiredMessage="Cliente: Campo obrigatório" style="width:100%">
+				<p:selectOneMenu id="contrato" value="#{mbeanModel.contrato.id}" required="true" requiredMessage="Contrato: Campo obrigatório" style="width:98%">
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-					<f:selectItems value="#{mbean.comboClientes}" />
-					<p:ajax event="change" listener="#{mbean.atualizarContratos}" update="contrato"/>											
+					<f:selectItems value="#{mbean.comboContratos}" />					
 				</p:selectOneMenu>
 
-				<p:selectOneMenu id="contrato" value="#{mbeanModel.contrato.id}" required="true" requiredMessage="Contrato: Campo obrigatório" style="width:100%">
-					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-					<f:selectItems value="#{mbeanModel.contrato.cliente.contratos}" var="i" itemLabel="#{i.descricao}" itemValue="#{i.id}"/>
-				</p:selectOneMenu>
+				<p:inputText id="cliente" maxlength="100" value="#{mbeanModel.contrato.cliente.nome}" styleClass="coluna100" disabled="true" />
 
 			</h:panelGrid>
 
-			<h:panelGrid columns="5" columnClasses="coluna10, coluna10, coluna35, coluna30, coluna15" style="width: 100%">
+			<h:panelGrid columns="5" columnClasses="coluna10, coluna10, coluna35, coluna35, coluna10" style="width: 100%">
 
 				<p:outputLabel for="dataInicial" value="Data Inicial" />
 				<p:outputLabel for="dataFinal" value="Data Final" />
@@ -39,9 +35,9 @@
 				<p:outputLabel for="operador" value="Operador" />
 				<p:outputLabel for="valor" value="Valor" />
 
-				<p:calendar id="dataInicial" required="true" requiredMessage="Data Inicial: Valor obrigatório" value="#{mbeanModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+				<p:calendar id="dataInicial" value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
 
-				<p:calendar id="dataFinal" required="true" requiredMessage="Data Final: Valor obrigatório" value="#{mbeanModel.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+				<p:calendar id="dataFinal" value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
 
 				<p:selectOneMenu id="equipamento" value="#{mbeanModel.equipamento.id}" required="true" requiredMessage="Equipamento: Campo obrigatório" style="width:98%">
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
@@ -63,8 +59,8 @@
 			<p:inputTextarea id="obs" rows="" maxlength="1000" value="#{mbeanModel.observacao}" styleClass="coluna99" />
 
 			<p:selectBooleanCheckbox id="ativo" value="#{mbeanModel.flagConcluido}" itemLabel="Concluído?" />
-
-			<br />
+			
+			<br/>
 
 			<p:fieldset legend="Medições" style="width: 100%">
 
@@ -137,7 +133,7 @@
 			<p:calendar id="dataInicialPesquisa" value="#{mbeanPesquisaModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="14" />
 
 			<p:outputLabel for="dataFinalPesquisa" value="Data Final" />
-			<p:calendar id="dataFinalPesquisa" value="#{mbeanPesquisaModel.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="14" />
+			<p:calendar id="dataFinalPesquisa" value="#{mbeanPesquisaModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="14" />
 
 			<p:selectBooleanCheckbox id="ativoPesquisa" value="#{mbeanPesquisaModel.flagConcluido}" itemLabel="Concluído?" />
 
@@ -151,29 +147,30 @@
 			<h:outputText value="#{linha.id}" />
 		</p:column>
 
-		<p:column headerText="Data Inicial" styleClass="coluna15">
+		<p:column headerText="Data Inicial" styleClass="coluna10">
 			<h:outputText value="#{linha.dataInicial}">
 				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
 			</h:outputText>
 		</p:column>
 
-		<p:column headerText="Data Final" styleClass="coluna15">
+		<p:column headerText="Data Final" styleClass="coluna10">
 			<h:outputText value="#{linha.dataFinal}">
 				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
 			</h:outputText>
 		</p:column>
 
-		<p:column headerText="Cliente" styleClass="coluna25">
+		<p:column headerText="Cliente" styleClass="coluna30">
 			<h:outputText value="#{linha.contrato.cliente.nome}" />
 		</p:column>
 
-		<p:column headerText="Contrato" styleClass="coluna25">
+		<p:column headerText="Contrato" styleClass="coluna30">
 			<h:outputText value="#{linha.contrato.descricao}" />
 		</p:column>
 
 		<p:column headerText="Situação" styleClass="coluna10">
 			<h:outputText value="#{linha.situacao}" />
 		</p:column>
+
 
 	</ui:define>
 
