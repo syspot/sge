@@ -124,16 +124,16 @@ public final class Menu extends TSActiveRecordAb<Menu> {
 		
 		query.append(" from Menu m where menuPai is null and flagAtivo = true order by ordem, descricao");
 				
-		return super.find(query.toString());
+		return super.find(query.toString(), null);
 	}
 		
 	public List<Menu> pesquisarExecutaveis() {
 		
 		StringBuilder query = new StringBuilder();
 		
-		query.append(" from Menu m where menuPai is not null and flagAtivo = true");
+		query.append(" from Menu m where menuPai is not null and flagAtivo = true order by ordem, descricao");
 				
-		return super.find(query.toString());
+		return super.find(query.toString(), null);
 	}
 	
 	

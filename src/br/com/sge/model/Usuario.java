@@ -139,7 +139,7 @@ public class Usuario extends TSActiveRecordAb<Usuario> {
 		params.add(PilotoUtil.tratarString(login));
 		params.add(flagAtivo);
 		
-		return super.find(query.toString(), params.toArray());
+		return super.find(query.toString(), fieldsOrderBy.toString(), params.toArray());
 	}
 
 	@Override

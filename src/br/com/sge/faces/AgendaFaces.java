@@ -44,6 +44,7 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		super.limpar();
 		getCrudModel().setTipoServico(new TipoServico());
 		getCrudModel().setContrato(new Contrato());
+		getCrudModel().getContrato().setCliente(new Cliente());
 		getCrudModel().setOperador(new Operador());
 		getCrudModel().setEquipamento(new Equipamento());
 		getCrudModel().setMedicoes(new ArrayList<Medicao>());
@@ -78,8 +79,8 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 
 	}
 	
-	public void atualizarContratos() {
-		getCrudModel().getContrato().getCliente().setContratos(getCrudModel().getContrato().findByModel("descricao"));
+	public void atualizarContratos() {		
+		getCrudModel().getContrato().getCliente().setContratos(new Contrato(getCrudModel().getContrato().getCliente()).findByModel("descricao"));
 	}
 
 	public void atualizarTipoServico() {

@@ -101,7 +101,7 @@ public class Permissao extends TSActiveRecordAb<Permissao> {
 		
 		params.add(grupo.getId());		
 		
-		return super.find(query.toString(), params.toArray());
+		return super.find(query.toString(), null, params.toArray());
 	}
 
 	@Override

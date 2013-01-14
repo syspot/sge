@@ -3,6 +3,7 @@ package br.com.sge.faces;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import br.com.topsys.database.hibernate.TSActiveRecordIf;
 import br.com.topsys.exception.TSApplicationException;
@@ -20,6 +21,8 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 	
 	private String fieldOrdem;
 	
+	private Map<String, Object> map;
+	
 	public String getFieldOrdem() {
 		return fieldOrdem;
 	}
@@ -32,7 +35,6 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 	
 	private boolean flagAlterar;
 	
-	@SuppressWarnings("unchecked")
 	private Class<T> modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	
 	@Override
@@ -67,19 +69,16 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 		return false;
 	}
 	
-	protected void prePersist(){
-	}
-	
 	protected void preInsert(){
 	}
 	
 	protected void preUpdate(){
 	}
 	
-	protected void posDetail(){
+	protected void prePersist(){
 	}
 	
-	protected void posPersist() throws TSApplicationException{
+	protected void posDetail(){
 	}
 	
 	@Override
@@ -93,13 +92,11 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 			return null;
 		}
 		
-		this.prePersist();
-		
 		this.preInsert();
 		
-		this.crudModel.save();
+		this.prePersist();
 		
-		this.posPersist();
+		this.crudModel.save();
 		
 		this.limpar();
 		
@@ -121,13 +118,11 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 			return null;
 		}
 		
-		this.prePersist();
-		
 		this.preUpdate();
 		
-		this.crudModel.update();
+		this.prePersist();
 		
-		this.posPersist();
+		this.crudModel.update();
 		
 		this.limpar();
 		
@@ -144,7 +139,7 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 		
 		this.limpar();
 		
-		this.grid = this.crudPesquisaModel.findByModel();
+		this.grid = this.crudPesquisaModel.findByModel(map, getFieldOrdem());
 		
 		this.tabIndex = 1;
 		
@@ -168,9 +163,9 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 	}
 	
 	@Override
-	protected String find() {				
+	protected String find() {
 		
-		this.grid = this.crudPesquisaModel.findByModel(getFieldOrdem());
+		this.grid = this.crudPesquisaModel.findByModel(map, getFieldOrdem());
 		
 		TSFacesUtil.gerarResultadoLista(this.grid);
 		
@@ -216,6 +211,14 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 
 	public void setFlagAlterar(boolean flagAlterar) {
 		this.flagAlterar = flagAlterar;
+	}
+	
+	public Map<String, Object> getMap() {
+		return map;
+	}
+
+	public void setMap(Map<String, Object> map) {
+		this.map = map;
 	}
 	
 }

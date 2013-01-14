@@ -1,6 +1,9 @@
 package br.com.sge.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,33 +20,41 @@ import br.com.topsys.util.TSUtil;
 
 @Entity
 @Table(name = "contrato")
-public class Contrato extends TSActiveRecordAb<Contrato>  {
+public class Contrato extends TSActiveRecordAb<Contrato> {
 
 	@Id
 	@SequenceGenerator(name = "CONTRATO_ID_SEQ", sequenceName = "contrato_id_seq", allocationSize = 1)
-	@GeneratedValue(generator="CONTRATO_ID_SEQ", strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(generator = "CONTRATO_ID_SEQ", strategy = GenerationType.SEQUENCE)
 	private Long id;
-	
+
 	private String descricao;
-	
+
 	@ManyToOne
-	@JoinColumn(name="cliente_id")
+	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
-	
-	@Column(name="data_contrato")
-	private Date dataContrato;	
-	
-	@Column(name="flag_ativo")
+
+	@Column(name = "data_contrato")
+	private Date dataContrato;
+
+	@Column(name = "flag_ativo")
 	private Boolean flagAtivo;
-	
+
 	public Contrato() {
-		
+
 	}
-	
+
 	public Contrato(Boolean flagAtivo) {
 		this.flagAtivo = flagAtivo;
 	}
 	
+	public Contrato(Long id) {
+		this.id = id;
+	}
+	
+	public Contrato(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
 	public Long getId() {
 		return TSUtil.tratarLong(id);
 	}
@@ -59,9 +70,9 @@ public class Contrato extends TSActiveRecordAb<Contrato>  {
 	public void setFlagAtivo(Boolean flagAtivo) {
 		this.flagAtivo = flagAtivo;
 	}
-	
-	public String getSituacao() {		
-		return (flagAtivo.equals(Boolean.TRUE)?"ATIVO":"INATIVO");
+
+	public String getSituacao() {
+		return (flagAtivo.equals(Boolean.TRUE) ? "ATIVO" : "INATIVO");
 	}
 
 	public String getDescricao() {
@@ -87,12 +98,53 @@ public class Contrato extends TSActiveRecordAb<Contrato>  {
 	public void setDataContrato(Date dataContrato) {
 		this.dataContrato = dataContrato;
 	}
-	
+
 	public String getDescricaoTotal() {
 		StringBuilder sb = new StringBuilder(this.getCliente().getNome().toUpperCase() + ": ");
 		sb.append(this.getDescricao());
-		
+
 		return sb.toString();
+	}
+	
+	@Override
+	public List<Contrato> findByModel(String... fieldsOrderBy) {
+		return findByModel(null,fieldsOrderBy);
+	}
+
+	@Override
+	public List<Contrato> findByModel(Map<String, Object> map,String... fieldsOrderBy) {
+
+		StringBuilder query = new StringBuilder();
+
+		query.append(" from Contrato c where 1=1 ");
+
+		if (!TSUtil.isEmpty(flagAtivo)) {
+			query.append("and c.flagAtivo = ? ");
+		}
+
+		if (!TSUtil.isEmpty(cliente) && !TSUtil.isEmpty(cliente.getId())) {
+			query.append("and c.cliente.id = ? ");
+		}
+
+		if (!TSUtil.isEmpty(dataContrato)) {
+			query.append("and c.dataContrato = ?");
+		}
+
+		List<Object> params = new ArrayList<Object>();
+
+		if (!TSUtil.isEmpty(flagAtivo)) {
+			params.add(flagAtivo);
+		}
+
+		if (!TSUtil.isEmpty(cliente) && !TSUtil.isEmpty(cliente.getId())) {
+			params.add(cliente.getId());
+		}
+
+		if (!TSUtil.isEmpty(dataContrato)) {
+			params.add(dataContrato);
+		}
+
+		return super.find(query.toString(), "descricao", params.toArray());
 	}
 
 	@Override
@@ -143,5 +195,5 @@ public class Contrato extends TSActiveRecordAb<Contrato>  {
 			return false;
 		return true;
 	}
-	
+
 }

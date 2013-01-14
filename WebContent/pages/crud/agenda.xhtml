@@ -18,10 +18,10 @@
 					<f:selectItems value="#{mbean.comboTiposServicos}" />
 				</p:selectOneMenu>
 
-				<p:selectOneMenu id="cliente" value="#{mbeanModel.contrato.cliente.id}" required="true" requiredMessage="Cliente: Campo obrigatório" style="width:100%">
+				<p:selectOneMenu id="cliente" value="#{mbeanModel.contrato.cliente.id}" required="true" requiredMessage="Cliente: Campo obrigatório" style="width:99%">
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 					<f:selectItems value="#{mbean.comboClientes}" />
-					<p:ajax event="change" listener="#{mbean.atualizarContratos}" update="contrato"/>											
+					<p:ajax event="change" listener="#{mbean.atualizarContratos}" update="contrato" global="false"/>											
 				</p:selectOneMenu>
 
 				<p:selectOneMenu id="contrato" value="#{mbeanModel.contrato.id}" required="true" requiredMessage="Contrato: Campo obrigatório" style="width:100%">
