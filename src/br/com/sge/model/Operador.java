@@ -30,6 +30,14 @@ public class Operador extends TSActiveRecordAb<Operador>  {
 	@Column(name="flag_ativo")
 	private Boolean flagAtivo;
 	
+	public Operador() {
+		
+	}
+	
+	public Operador(Boolean flagAtivo) {
+		this.flagAtivo = flagAtivo;
+	}
+	
 	public Long getId() {
 		return TSUtil.tratarLong(id);
 	}

@@ -30,6 +30,8 @@
 		<mapping class="br.com.sge.model.Contrato" />
 		<mapping class="br.com.sge.model.Fornecedor" />
 		<mapping class="br.com.sge.model.Equipamento" />
+		<mapping class="br.com.sge.model.Agenda" />
+		<mapping class="br.com.sge.model.Medicao" />
 		
 
 	</session-factory>

@@ -36,6 +36,14 @@ public class Contrato extends TSActiveRecordAb<Contrato>  {
 	@Column(name="flag_ativo")
 	private Boolean flagAtivo;
 	
+	public Contrato() {
+		
+	}
+	
+	public Contrato(Boolean flagAtivo) {
+		this.flagAtivo = flagAtivo;
+	}
+	
 	public Long getId() {
 		return TSUtil.tratarLong(id);
 	}

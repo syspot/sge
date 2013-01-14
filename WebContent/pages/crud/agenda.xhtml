@@ -1,0 +1,181 @@
+<ui:composition template="/resources/templates/templateCRUD.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="${agendaFaces}" />
+	<ui:param name="mbeanModel" value="${agendaFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${agendaFaces.crudPesquisaModel}" />
+
+	<ui:define name="cadastro">
+
+		<h:panelGrid columns="1" style="width:90%">
+
+
+
+			<h:panelGrid columns="3" columnClasses="coluna10, coluna50, coluna40" style="width: 100%">
+
+				<p:outputLabel for="tipoServico" value="Tipo do Serviço" />
+				<p:outputLabel for="contrato" value="Contrato" />
+				<p:outputLabel for="cliente" value="Cliente" />
+
+				<p:selectOneMenu id="tipoServico" value="#{mbeanModel.tipoServico.id}" required="true" requiredMessage="Tipo do Serviço: Campo obrigatório" style="width:150px">
+					<f:selectItems value="#{mbean.comboTiposServicos}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="contrato" value="#{mbeanModel.contrato.id}" required="true" requiredMessage="Contrato: Campo obrigatório" style="width:90%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboContratos}" />
+				</p:selectOneMenu>
+
+				<p:inputText id="cliente" maxlength="100" value="#{mbeanModel.contrato.cliente.nome}" styleClass="coluna90" disabled="true" />
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="5" columnClasses="coluna10, coluna10, coluna35, coluna35, coluna10" style="width: 100%">
+
+				<p:outputLabel for="dataInicial" value="Data Inicial" />
+				<p:outputLabel for="dataFinal" value="Data Final" />
+				<p:outputLabel for="equipamento" value="Equipamento" />
+				<p:outputLabel for="operador" value="Operador" />
+				<p:outputLabel for="valor" value="Valor" />
+
+				<p:calendar id="dataInicial" value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="14" />
+
+				<p:calendar id="dataFinal" value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="14" />
+
+				<p:selectOneMenu id="equipamento" value="#{mbeanModel.equipamento.id}" required="true" requiredMessage="Equipamento: Campo obrigatório" style="width:90%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboEquipamentos}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="operador" value="#{mbeanModel.operador.id}" required="true" requiredMessage="Operador: Campo obrigatório" style="width:90%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboOperadores}" />
+				</p:selectOneMenu>
+
+				<p:inputText id="valor" style="width: 150px; text-align: right" value="#{mbeanModel.valor}" onkeyup="return mascaraMoeda(this)">
+					<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+				</p:inputText>
+
+			</h:panelGrid>
+
+			<p:outputLabel for="obs" value="Observação" />
+			<p:inputTextarea id="obs" rows="" maxlength="1000" value="#{mbeanModel.observacao}" styleClass="coluna90" />
+
+			<p:selectBooleanCheckbox id="ativo" value="#{mbeanModel.flagConcluido}" itemLabel="Concluído?" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="tabsMeio">
+
+		<p:tab title="Medições">
+
+			<h:panelGrid columns="1">
+
+				<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{mbean.addMedicao}" process="@this" update="gridMedicao" />
+
+				<p:dataTable id="gridMedicao" value="#{mbeanModel.medicoes}" var="linha" style="width: 90%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="20" paginatorAlwaysVisible="false">
+
+					<p:column headerText="Código" styleClass="coluna5">
+						<div align="center">
+							<h:outputText value="#{linha.id}" />
+						</div>
+					</p:column>
+
+					<p:column headerText="Data Inicial" styleClass="coluna10">
+						<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="14" />
+					</p:column>
+
+					<p:column headerText="Data Final" styleClass="coluna10">
+						<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="14" />
+					</p:column>
+
+					<p:column headerText="Operador" styleClass="coluna50">
+						<p:selectOneMenu id="operadorMedicao" value="#{linha.operador.id}" required="true" requiredMessage="Operador Medição: Campo obrigatório" style="width:90%">
+							<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+							<f:selectItems value="#{mbean.comboOperadores}" />
+						</p:selectOneMenu>
+					</p:column>
+
+					<p:column headerText="Valor" styleClass="coluna10">
+						<p:inputText id="valorMedicao" style="width: 150px; text-align: right" value="#{linha.valor}" onkeyup="return mascaraMoeda(this)">
+							<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+						</p:inputText>
+					</p:column>
+
+					<p:column headerText="Excluir" styleClass="coluna5">
+
+						<div align="center">
+
+							<p:commandLink action="#{mbean.excluirContrato}" icon="delete16" id="clExcluir" process="@this" update="gridMedicao @form">
+
+								<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+								<f:setPropertyActionListener target="#{mbean.contratoSelecionado}" value="#{linha}" />
+
+							</p:commandLink>
+
+						</div>
+
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+		</p:tab>
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" style="width:90%">
+
+			<p:outputLabel for="agendaID" value="Código Agenda" />
+			<p:inputText id="agendaID" value="#{mbeanPesquisaModel.id}" styleClass="coluna10" />
+
+			<p:outputLabel for="dataInicialPesquisa" value="Data Inicial" />
+			<p:calendar id="dataInicialPesquisa" value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="14" />
+
+			<p:outputLabel for="dataFinalPesquisa" value="Data Final" />
+			<p:calendar id="dataFinalPesquisa" value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="14" />
+
+			<p:selectBooleanCheckbox id="ativoPesquisa" value="#{mbeanPesquisaModel.flagConcluido}" itemLabel="Concluído?" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Código" styleClass="coluna10">
+			<h:outputText value="#{linha.id}" />
+		</p:column>
+
+		<p:column headerText="Data Inicial" styleClass="coluna10">
+			<h:outputText value="#{linha.dataInicial}">
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Data Final" styleClass="coluna10">
+			<h:outputText value="#{linha.dataFinal}">
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Cliente" styleClass="coluna30">
+			<h:outputText value="#{linha.contrato.cliente.nome}" />
+		</p:column>
+
+		<p:column headerText="Contrato" styleClass="coluna30">
+			<h:outputText value="#{linha.contrato.descricao}" />
+		</p:column>
+
+		<p:column headerText="Situação" styleClass="coluna10">
+			<h:outputText value="#{linha.situacao}" />
+		</p:column>
+
+
+	</ui:define>
+
+</ui:composition>

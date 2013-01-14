@@ -1,5 +1,6 @@
 package br.com.sge.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -43,26 +44,28 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 	@JoinColumn(name = "operador_id")
 	private Operador operador;
 	
+	@Column(name = "data_inicial")
+	private Date dataInicial;
 	
+	@Column(name = "data_final")
+	private Date dataFinal;
 
-	private String identificador;
+	private Double valor;
 
-	private String telefone;
-
-	private String endereco;
-
-	@Column(name = "flag_ativo")
-	private Boolean flagAtivo;
+	@Column(name = "flag_concluido")
+	private Boolean flagConcluido;
 	
-	@OneToMany(mappedBy = "cliente", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)	
-	private List<Contrato> contratos;
+	private String observacao;
+	
+	@OneToMany(mappedBy = "agenda", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)	
+	private List<Medicao> medicoes;
 
 	public Agenda() {
 
 	}
 
-	public Agenda(Boolean flagAtivo) {
-		this.flagAtivo = flagAtivo;
+	public Agenda(Boolean flagConcluido) {
+		this.flagConcluido = flagConcluido;
 	}
 
 	public Long getId() {
@@ -73,64 +76,87 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 		this.id = id;
 	}
 
-	public Boolean getFlagAtivo() {
-		return flagAtivo;
-	}
-
-	public void setFlagAtivo(Boolean flagAtivo) {
-		this.flagAtivo = flagAtivo;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
 	public String getSituacao() {
-		return (flagAtivo.equals(Boolean.TRUE) ? "ATIVO" : "INATIVO");
+		return (flagConcluido.equals(Boolean.TRUE) ? "Concluído" : "Em Aberto");
 	}
 
-	public TipoIdentificador getTipoIdentificador() {
-		return tipoIdentificador;
+	public Contrato getContrato() {
+		return contrato;
 	}
 
-	public void setTipoIdentificador(TipoIdentificador tipoIdentificador) {
-		this.tipoIdentificador = tipoIdentificador;
+	public void setContrato(Contrato contrato) {
+		this.contrato = contrato;
 	}
 
-	public String getIdentificador() {
-		return identificador;
+	public TipoServico getTipoServico() {
+		return tipoServico;
 	}
 
-	public void setIdentificador(String identificador) {
-		this.identificador = identificador;
+	public void setTipoServico(TipoServico tipoServico) {
+		this.tipoServico = tipoServico;
 	}
 
-	public String getTelefone() {
-		return telefone;
+	public Equipamento getEquipamento() {
+		return equipamento;
 	}
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+	public void setEquipamento(Equipamento equipamento) {
+		this.equipamento = equipamento;
 	}
 
-	public String getEndereco() {
-		return endereco;
+	public Operador getOperador() {
+		return operador;
 	}
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
+	public void setOperador(Operador operador) {
+		this.operador = operador;
 	}
 
-	public List<Contrato> getContratos() {
-		return contratos;
+	public Date getDataInicial() {
+		return dataInicial;
 	}
 
-	public void setContratos(List<Contrato> contratos) {
-		this.contratos = contratos;
+	public void setDataInicial(Date dataInicial) {
+		this.dataInicial = dataInicial;
 	}
 
+	public Date getDataFinal() {
+		return dataFinal;
+	}
+
+	public void setDataFinal(Date dataFinal) {
+		this.dataFinal = dataFinal;
+	}
+
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
+
+	public Boolean getFlagConcluido() {
+		return flagConcluido;
+	}
+
+	public void setFlagConcluido(Boolean flagConcluido) {
+		this.flagConcluido = flagConcluido;
+	}
+
+	public List<Medicao> getMedicoes() {
+		return medicoes;
+	}
+
+	public void setMedicoes(List<Medicao> medicoes) {
+		this.medicoes = medicoes;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
 }
