@@ -17,12 +17,12 @@ import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
 
 @Entity
-@Table(name = "grupos")
+@Table(name = "grupo")
 public class Grupo extends TSActiveRecordAb<Grupo>  {
 
 	@Id
-	@SequenceGenerator(name = "GRUPOS_ID_SEQ", sequenceName = "grupos_id_seq", allocationSize = 1)
-	@GeneratedValue(generator="GRUPOS_ID_SEQ", strategy=GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "GRUPO_ID_SEQ", sequenceName = "grupo_id_seq", allocationSize = 1)
+	@GeneratedValue(generator="GRUPO_ID_SEQ", strategy=GenerationType.SEQUENCE)
 	private Long id;
 	
 	private String descricao;

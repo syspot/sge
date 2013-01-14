@@ -1,0 +1,92 @@
+<ui:composition template="/resources/templates/templateCRUD.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="${equipamentoFaces}" />
+	<ui:param name="mbeanModel" value="${equipamentoFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${equipamentoFaces.crudPesquisaModel}" />
+
+	<ui:define name="cadastro">
+
+		<h:panelGrid columns="1" style="width:90%">
+
+			<p:outputLabel for="descricao" value="Descrição" />
+			<p:inputText id="descricao" required="true" requiredMessage="Descrição: Campo obrigatorio" maxlength="100" value="#{mbeanModel.descricao}" styleClass="coluna50" />
+
+			<p:outputLabel for="identificador" value="Identificação" />
+			<p:inputText id="identificador" maxlength="30" value="#{mbeanModel.identificador}" style="width: 150px" />
+
+			<p:outputLabel for="tipoEquipamento" value="Tipo de Equipamento" />
+			<p:selectOneMenu id="tipoEquipamento" value="#{mbeanModel.tipoEquipamento.id}" required="true" requiredMessage="Tipo de Equipamento: Campo obrigatório" style="width:30%">
+				<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+				<f:selectItems value="#{mbean.comboTiposEquipamentos}" />
+			</p:selectOneMenu>
+
+			<p:outputLabel for="fornecedor" value="Fornecedor (Terceirizado)" />
+			<p:selectOneMenu id="fornecedor" value="#{mbeanModel.fornecedor.id}" style="width:50%">
+				<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+				<f:selectItems value="#{mbean.comboFornecedores}" />
+			</p:selectOneMenu>
+
+			<p:outputLabel for="percFornecedor" value="% Fornecedor" />
+			<p:inputText id="percFornecedor" style="width: 150px; text-align: right" value="#{mbeanModel.percentualFornecedor}" onkeyup="return mascaraMoeda(this)">
+				<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+			</p:inputText>
+
+			<p:selectBooleanCheckbox id="ativo" value="#{mbeanModel.flagAtivo}" itemLabel="Ativo?" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" style="width:50%">
+
+			<p:outputLabel for="descricaoPesquisa" value="Descrição" />
+			<p:inputText id="descricaoPesquisa" value="#{mbeanPesquisaModel.descricao}" styleClass="coluna90" />
+
+			<p:outputLabel for="identificadorPesquisa" value="Identificação" />
+			<p:inputText id="identificadorPesquisa" value="#{mbeanPesquisaModel.identificador}" styleClass="coluna50" />
+
+			<p:outputLabel for="tipoEquipamentoPesquisa" value="Tipo de Equipamento" />
+			<p:selectOneMenu id="tipoEquipamentoPesquisa" value="#{mbeanPesquisaModel.tipoEquipamento.id}" style="width:30%">
+				<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+				<f:selectItems value="#{mbean.comboTiposEquipamentos}" />
+			</p:selectOneMenu>
+
+			<p:outputLabel for="fornecedorPesquisa" value="Fornecedor (Terceirizado)" />
+			<p:selectOneMenu id="fornecedorPesquisa" value="#{mbeanPesquisaModel.fornecedor.id}" style="width:90%">
+				<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+				<f:selectItems value="#{mbean.comboFornecedores}" />
+			</p:selectOneMenu>
+
+			<p:selectBooleanCheckbox id="ativoPesquisa" value="#{mbeanPesquisaModel.flagAtivo}" itemLabel="Ativo?" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Descrição" styleClass="coluna40">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+		<p:column headerText="Identificação" styleClass="coluna10">
+			<h:outputText value="#{linha.identificador}" />
+		</p:column>
+
+		<p:column headerText="Tipo de Equipamento" styleClass="coluna10" sortBy="#{linha.tipoEquipamento.descricao}">
+			<h:outputText value="#{linha.tipoEquipamento.descricao}" />
+		</p:column>
+
+		<p:column headerText="Fornecedor" styleClass="coluna20" sortBy="#{linha.fornecedor.nome}">
+			<h:outputText value="#{linha.fornecedor.nome}" />
+		</p:column>
+
+		<p:column headerText="Situação" styleClass="coluna10">
+			<h:outputText value="#{linha.situacao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

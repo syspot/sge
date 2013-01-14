@@ -1,0 +1,61 @@
+<ui:composition template="/resources/templates/templateCRUD.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${operadorFaces}" />
+	<ui:param name="mbeanModel" value="${operadorFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${operadorFaces.crudPesquisaModel}" />
+
+	<ui:define name="cadastro">
+
+		<h:panelGrid columns="1" style="width:50%">
+
+			<p:outputLabel for="nome" value="Nome" />
+			<p:inputText id="nome" required="true" requiredMessage="Nome: Campo obrigatorio" maxlength="100" value="#{mbeanModel.nome}" styleClass="coluna90" />
+
+			<p:outputLabel for="matricula" value="Matricula" />
+			<p:inputText id="matricula" required="true" requiredMessage="Matricula: Campo obrigatorio" maxlength="30" value="#{mbeanModel.matricula}" styleClass="coluna50" />
+
+			<p:outputLabel for="valorHora" value="Valor/Hora" />
+			<p:inputText id="valorHora" style="width: 150px; text-align: right" value="#{mbeanModel.valorHora}" onkeyup="return mascaraMoeda(this)">
+				<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+			</p:inputText>
+
+			<p:selectBooleanCheckbox id="ativo" value="#{mbeanModel.flagAtivo}" itemLabel="Ativo?" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" style="width:50%">
+
+			<p:outputLabel for="nomePesquisa" value="Nome" />
+			<p:inputText id="nomePesquisa" value="#{mbeanPesquisaModel.nome}" styleClass="coluna90" />
+			
+			<p:outputLabel for="matriculaPesquisa" value="Matricula" />
+			<p:inputText id="matriculaPesquisa" value="#{mbeanPesquisaModel.matricula}" styleClass="coluna50" />
+
+			<p:selectBooleanCheckbox id="ativoPesquisa" value="#{mbeanPesquisaModel.flagAtivo}" itemLabel="Ativo?" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Nome" styleClass="coluna60">
+			<h:outputText value="#{linha.nome}" />
+		</p:column>
+		
+		<p:column headerText="Matricula" styleClass="coluna20">
+			<h:outputText value="#{linha.matricula}" />
+		</p:column>
+
+		<p:column headerText="Situação" styleClass="coluna10">
+			<h:outputText value="#{linha.situacao}" />
+		</p:column>
+
+
+	</ui:define>
+
+</ui:composition>

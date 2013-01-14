@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="value" required="true" />
+	<composite:attribute name="disabled" default="false"/>
+	<composite:attribute name="readonly" default="false"/>
+	<composite:attribute name="rendered" default="true"/>
+	<composite:attribute name="required"/>
+	<composite:attribute name="enableTyping" default="true"/>
+	<composite:attribute name="immediate" default="false"/>
+	<composite:attribute name="label" default="Data"/>
+	<composite:attribute name="title" default="Data"/>
+	<composite:attribute name="minDate"/>
+	<composite:attribute name="maxDate"/>
+	<composite:attribute name="size" default="#{fn:length(cc.attrs.pattern)+2}" />
+	<composite:attribute name="yearRange" default="c-90:c+10" />
+	<composite:attribute name="locale" default="pt_BR"/>
+	<composite:attribute name="timeZone" default="America/Recife"/>
+	<composite:attribute name="pattern" default="dd/MM/yyyy" type="java.lang.String" required="true"/>
+	<composite:attribute name="navigator" default="true" shortDescription="Escolha se poderá navegar entre os meses e anos"/>
+	<composite:attribute name="listener"/>
+	<composite:attribute name="update"/>
+</composite:interface>
+
+<composite:implementation>
+	
+	<h:outputScript library="js" name="calendar.js" target="head" />
+	
+	<p:calendar maxlength="#{fn:length(cc.attrs.pattern)}" navigator="#{cc.attrs.navigator}" onkeyup="maskDate(this,event,'#{cc.attrs.pattern}')" 
+		readonlyInput="#{!cc.attrs.enableTyping}"
+		value="#{cc.attrs.value}" disabled="#{cc.attrs.disabled}" readonly="#{cc.attrs.readonly}"
+		immediate="#{cc.attrs.immediate}" label="#{cc.attrs.label}" locale="#{cc.attrs.locale}"
+		title="#{cc.attrs.title}" rendered="#{cc.attrs.rendered}" mindate="#{cc.attrs.minDate}"
+		maxdate="#{cc.attrs.maxDate}" yearRange="#{cc.attrs.yearRange}" size="#{cc.attrs.size}"
+		onfocus="focusDate(this);" onblur="blurDate(this)" required="#{cc.attrs.required}" timeZone="#{cc.attrs.timeZone}" pattern="#{cc.attrs.pattern}">
+			<p:ajax event="dateSelect" global="false" listener="#{cc.attrs.listener}" update="#{cc.attrs.update}"/>
+		</p:calendar>
+		
+</composite:implementation>
+</html>

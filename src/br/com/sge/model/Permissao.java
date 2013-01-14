@@ -18,12 +18,12 @@ import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
 
 @Entity
-@Table(name = "permissoes")
+@Table(name = "permissao")
 public class Permissao extends TSActiveRecordAb<Permissao> {
 
 	@Id
-	@SequenceGenerator(name = "PERMISSOES_ID_SEQ", sequenceName = "permissoes_id_seq", allocationSize = 1)
-	@GeneratedValue(generator="PERMISSOES_ID_SEQ", strategy=GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "PERMISSAO_ID_SEQ", sequenceName = "permissao_id_seq", allocationSize = 1)
+	@GeneratedValue(generator="PERMISSAO_ID_SEQ", strategy=GenerationType.SEQUENCE)
 	private Long id;
 
 	@ManyToOne

@@ -1,0 +1,45 @@
+<ui:composition template="/resources/templates/templateCRUD.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${fornecedorFaces}" />
+	<ui:param name="mbeanModel" value="${fornecedorFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${fornecedorFaces.crudPesquisaModel}" />
+
+	<ui:define name="cadastro">
+
+		<h:panelGrid columns="1" style="width:50%">
+
+			<p:outputLabel for="nome" value="Nome" />
+			<p:inputText id="nome" required="true" requiredMessage="Nome: Campo obrigatorio" maxlength="50" value="#{mbeanModel.nome}" styleClass="coluna90" />
+						
+			<p:selectBooleanCheckbox id="ativo" value="#{mbeanModel.flagAtivo}" itemLabel="Ativo?" />
+			
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" style="width:50%">
+
+			<p:outputLabel for="nomePesquisa" value="Nome" />
+			<p:inputText id="nomePesquisa" value="#{mbeanPesquisaModel.nome}" styleClass="coluna90" />
+						
+			<p:selectBooleanCheckbox id="ativoPesquisa" value="#{mbeanPesquisaModel.flagAtivo}" itemLabel="Ativo?" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Descrição" styleClass="coluna80">
+			<h:outputText value="#{linha.nome}" />
+		</p:column>
+		
+		<p:column headerText="Situação" styleClass="coluna10">
+			<h:outputText value="#{linha.situacao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,115 @@
+<ui:composition template="/resources/templates/templateCRUD.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="${clienteFaces}" />
+	<ui:param name="mbeanModel" value="${clienteFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${clienteFaces.crudPesquisaModel}" />
+
+	<ui:define name="cadastro">
+
+		<h:panelGrid columns="1" style="width:90%">
+
+			<p:outputLabel for="nome" value="Nome" />
+			<p:inputText id="nome" required="true" requiredMessage="Nome: Campo obrigatorio" maxlength="100" value="#{mbeanModel.nome}" styleClass="coluna50" />
+
+			<h:panelGrid columns="2" columnClasses="coluna20, coluna80" style="width: 50%">
+				<p:outputLabel for="tipoIdentificador" value="Tipo de Identificador" />
+				<p:outputLabel for="identificador" value="Identificador" />
+
+				<p:selectOneMenu id="tipoIdentificador" value="#{mbeanModel.tipoIdentificador.id}" required="true" requiredMessage="Tipo de Identificador: Campo obrigatório" style="width:150px">
+					<f:selectItems value="#{mbean.tiposIdentificadores}" />
+					<p:ajax event="change" listener="#{mbean.atualizarTipoIdentificador}" update="identificador" global="false"/>											
+				</p:selectOneMenu>
+
+				<p:inputMask id="identificador" mask="#{mbeanModel.tipoIdentificador.mascara}" required="true" requiredMessage="Identificador: Campo obrigatorio" maxlength="30" value="#{mbeanModel.identificador}" styleClass="coluna90" />
+
+			</h:panelGrid>
+
+			<p:outputLabel for="telefone" value="Telefone" />
+			<p:inputText id="telefone" maxlength="15" value="#{mbeanModel.telefone}" style="width: 150px" />
+
+			<p:outputLabel for="endereco" value="Endereço" />
+			<p:inputTextarea rows="3" id="endereco" maxlength="500" value="#{mbeanModel.endereco}" styleClass="coluna60" />
+
+			<p:selectBooleanCheckbox id="ativo" value="#{mbeanModel.flagAtivo}" itemLabel="Ativo?" />
+
+			<p:panel style="width: 100%">
+
+				<h:panelGrid columns="1">
+
+					<p:commandButton id="btnReferencia" value="Adicionar Contrato" icon="ui-icon-plus" action="#{mbean.addContrato}" process="@this" update="gridContrato" />
+
+					<p:dataTable id="gridContrato" value="#{mbeanModel.contratos}" var="linha" style="width: 100%" emptyMessage="Sem contrato anexado" paginator="true" rows="10" paginatorAlwaysVisible="false">
+
+						<p:column headerText="Código" styleClass="coluna10">
+							<div align="center">
+								<h:outputText value="#{linha.id}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="Contrato" styleClass="coluna80">
+							<p:inputTextarea rows="2" value="#{linha.descricao}" style="width: 90%" autoResize="false" />
+						</p:column>
+
+						<p:column headerText="Data" styleClass="coluna5">
+							<p:calendar value="#{linha.dataContrato}" navigator="true" pattern="dd/MM/yyyy" size="14" />
+						</p:column>
+
+						<p:column headerText="Excluir" styleClass="coluna5">
+
+							<div align="center">
+
+								<p:commandLink action="#{mbean.excluirContrato}" icon="delete16" id="clExcluir" process="@this" update="gridContrato @form">
+
+									<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+									<f:setPropertyActionListener target="#{mbean.contratoSelecionado}" value="#{linha}" />
+
+								</p:commandLink>
+
+							</div>
+
+						</p:column>
+
+					</p:dataTable>
+
+				</h:panelGrid>
+
+			</p:panel>
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" style="width:50%">
+
+			<p:outputLabel for="nomePesquisa" value="Nome" />
+			<p:inputText id="nomePesquisa" value="#{mbeanPesquisaModel.nome}" styleClass="coluna90" />
+
+			<p:outputLabel for="identificadorPesquisa" value="Identificador" />
+			<p:inputText id="identificadorPesquisa" value="#{mbeanPesquisaModel.identificador}" styleClass="coluna50" />
+
+			<p:selectBooleanCheckbox id="ativoPesquisa" value="#{mbeanPesquisaModel.flagAtivo}" itemLabel="Ativo?" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Nome" styleClass="coluna60">
+			<h:outputText value="#{linha.nome}" />
+		</p:column>
+
+		<p:column headerText="Identificador" styleClass="coluna20">
+			<h:outputText value="#{linha.identificador}" />
+		</p:column>
+
+		<p:column headerText="Situação" styleClass="coluna10">
+			<h:outputText value="#{linha.situacao}" />
+		</p:column>
+
+
+	</ui:define>
+
+</ui:composition>
