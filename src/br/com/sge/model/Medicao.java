@@ -91,4 +91,61 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 	public void setAgenda(Agenda agenda) {
 		this.agenda = agenda;
 	}
+	
+	/*TODO Resolver bug na tela de agenda_medicao */
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((agenda == null) ? 0 : agenda.hashCode());
+		result = prime * result + ((dataFinal == null) ? 0 : dataFinal.hashCode());
+		result = prime * result + ((dataInicial == null) ? 0 : dataInicial.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((operador == null) ? 0 : operador.hashCode());
+		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Medicao other = (Medicao) obj;
+		if (agenda == null) {
+			if (other.agenda != null)
+				return false;
+		} else if (!agenda.equals(other.agenda))
+			return false;
+		if (dataFinal == null) {
+			if (other.dataFinal != null)
+				return false;
+		} else if (!dataFinal.equals(other.dataFinal))
+			return false;
+		if (dataInicial == null) {
+			if (other.dataInicial != null)
+				return false;
+		} else if (!dataInicial.equals(other.dataInicial))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (operador == null) {
+			if (other.operador != null)
+				return false;
+		} else if (!operador.equals(other.operador))
+			return false;
+		if (valor == null) {
+			if (other.valor != null)
+				return false;
+		} else if (!valor.equals(other.valor))
+			return false;
+		return true;
+	}
 }

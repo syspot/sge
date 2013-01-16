@@ -20,12 +20,11 @@ import br.com.topsys.web.util.TSFacesUtil;
 @ManagedBean(name = "autenticacaoFaces")
 public class AutenticacaoFaces extends TSMainFaces {
 
-	
 	private String nomeTela;
 	private String tela;
 	private Usuario usuario;
 	private List<Menu> menus;
-	private List<Permissao> permissoes;	
+	private List<Permissao> permissoes;
 	private Permissao PermissaoSelecionada;
 	private Integer tabAtiva;
 
@@ -36,18 +35,18 @@ public class AutenticacaoFaces extends TSMainFaces {
 		setTabAtiva(new Integer(0));
 
 		setNomeTela("Área de Trabalho");
-		
+
 	}
-	
+
 	protected void clearFields() {
-    	
-        this.usuario = new Usuario();
 
-        this.menus = Collections.emptyList();               
-        
-        this.PermissaoSelecionada = new Permissao();
+		this.usuario = new Usuario();
 
-    }
+		this.menus = Collections.emptyList();
+
+		this.PermissaoSelecionada = new Permissao();
+
+	}
 
 	public String redirecionar() {
 
@@ -58,33 +57,47 @@ public class AutenticacaoFaces extends TSMainFaces {
 		setTela(this.PermissaoSelecionada.getMenu().getUrl());
 		setNomeTela("Area de Trabalho > " + PermissaoSelecionada.getMenu().getMenuPai().getDescricao() + " > " + PermissaoSelecionada.getMenu().getDescricao());
 		setTabAtiva(Integer.valueOf(this.menus.indexOf(this.PermissaoSelecionada.getMenu().getMenuPai())));
-		
+
 		return SUCESSO;
 	}
-	
+
 	private void carregarMenu() {
-		
+
 		menus = new Menu().pesquisarCabecalhos(UsuarioUtil.obterUsuarioConectado().getGrupo().getId());
-		
+
 		Permissao permissao = new Permissao();
 		permissao.setGrupo(UsuarioUtil.obterUsuarioConectado().getGrupo());
 		permissoes = permissao.pesquisarPermissoes();
-		
+
 	}
-	
-	public String login() {			
-		
-		usuario = UsuarioUtil.usuarioAutenticado(usuario);
-				
-		if (TSUtil.isEmpty(usuario)) {
-			clearFields();
-			PilotoUtil.addWarnMessage("Login/Senha sem credencial para acesso.");			
-			return null;
+
+	public boolean isTelaAgendamento() {
+
+		if (!TSUtil.isEmpty(this.PermissaoSelecionada) && 
+			!TSUtil.isEmpty(this.PermissaoSelecionada.getMenu()) &&
+			!TSUtil.isEmpty(this.PermissaoSelecionada.getMenu().getId())) {
+			
+			return Constantes.TELA_AGENDAMENTO.equals(this.PermissaoSelecionada.getMenu().getId());
+			
 		}
 		
+		return false;
+
+	}
+
+	public String login() {
+
+		usuario = UsuarioUtil.usuarioAutenticado(usuario);
+
+		if (TSUtil.isEmpty(usuario)) {
+			clearFields();
+			PilotoUtil.addWarnMessage("Login/Senha sem credencial para acesso.");
+			return null;
+		}
+
 		TSFacesUtil.addObjectInSession(Constantes.USUARIO_CONECTADO, usuario);
 		carregarMenu();
-				
+
 		return SUCESSO;
 	}
 
@@ -148,5 +161,5 @@ public class AutenticacaoFaces extends TSMainFaces {
 	public void setPermissaoSelecionada(Permissao permissaoSelecionada) {
 		PermissaoSelecionada = permissaoSelecionada;
 	}
-	
+
 }

@@ -405,29 +405,20 @@ img.right {
     width:1000px;
 }
 
-.azul {
-    background-color: #599fcf !important;
-    background-image: none !important;
-    color: #000000 !important;
-    font-weight: bold;
+.azul,.azul .fc-event-skin,.azul a {
+	background-color: #4aa4ea;
 }
 
-.laranja {
-    background-color: darkorange !important;
-    background-image: none !important;
-    color: #000000 !important;
+.azulEscuro,.azulEscuro .fc-event-skin,.azulEscuro a {
+	background-color: darkblue;
 }
 
-.vermelho {
-    background-color: palegoldenrod  !important;
-    background-image: none !important;
-    color: #000000 !important;
+.verde,.verde .fc-event-skin,.verde a {
+	background-color: lightgreen;
 }
 
-.verde {
-    background-color: powderblue  !important;
-    background-image: none !important;
-    color: #000000 !important;
+.verdeEscuro,.verdeEscuro .fc-event-skin,.verdeEscuro a {
+	background-color: darkgreen;
 }
 
 .cadeado {
@@ -942,6 +933,11 @@ img.right {
 .dialog80 {
     width: 80% !important;
     height: 80% !important;    
+}
+
+.dialog90 {
+    width: 90% !important;
+    height: 90% !important;    
 }
 
 .dialog80_2 {

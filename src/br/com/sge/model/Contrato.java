@@ -101,6 +101,7 @@ public class Contrato extends TSActiveRecordAb<Contrato> {
 
 	public String getDescricaoTotal() {
 		StringBuilder sb = new StringBuilder(this.getCliente().getNome().toUpperCase() + ": ");
+		sb.append(this.getId() + ". ");
 		sb.append(this.getDescricao());
 
 		return sb.toString();

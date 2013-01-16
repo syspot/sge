@@ -110,4 +110,65 @@ public class Equipamento extends TSActiveRecordAb<Equipamento> {
 		this.identificador = identificador;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((flagAtivo == null) ? 0 : flagAtivo.hashCode());
+		result = prime * result + ((fornecedor == null) ? 0 : fornecedor.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((identificador == null) ? 0 : identificador.hashCode());
+		result = prime * result + ((percentualFornecedor == null) ? 0 : percentualFornecedor.hashCode());
+		result = prime * result + ((tipoEquipamento == null) ? 0 : tipoEquipamento.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Equipamento other = (Equipamento) obj;
+		if (descricao == null) {
+			if (other.descricao != null)
+				return false;
+		} else if (!descricao.equals(other.descricao))
+			return false;
+		if (flagAtivo == null) {
+			if (other.flagAtivo != null)
+				return false;
+		} else if (!flagAtivo.equals(other.flagAtivo))
+			return false;
+		if (fornecedor == null) {
+			if (other.fornecedor != null)
+				return false;
+		} else if (!fornecedor.equals(other.fornecedor))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (identificador == null) {
+			if (other.identificador != null)
+				return false;
+		} else if (!identificador.equals(other.identificador))
+			return false;
+		if (percentualFornecedor == null) {
+			if (other.percentualFornecedor != null)
+				return false;
+		} else if (!percentualFornecedor.equals(other.percentualFornecedor))
+			return false;
+		if (tipoEquipamento == null) {
+			if (other.tipoEquipamento != null)
+				return false;
+		} else if (!tipoEquipamento.equals(other.tipoEquipamento))
+			return false;
+		return true;
+	}
+
 }

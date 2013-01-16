@@ -49,5 +49,42 @@ public class TipoIdentificador extends TSActiveRecordAb<TipoIdentificador>  {
 	public void setMascara(String mascara) {
 		this.mascara = mascara;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((mascara == null) ? 0 : mascara.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TipoIdentificador other = (TipoIdentificador) obj;
+		if (descricao == null) {
+			if (other.descricao != null)
+				return false;
+		} else if (!descricao.equals(other.descricao))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (mascara == null) {
+			if (other.mascara != null)
+				return false;
+		} else if (!mascara.equals(other.mascara))
+			return false;
+		return true;
+	}
 	
 }

@@ -82,5 +82,54 @@ public class TipoEquipamento extends TSActiveRecordAb<TipoEquipamento>  {
 	public void setValorServico(Double valorServico) {
 		this.valorServico = valorServico;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((flagAtivo == null) ? 0 : flagAtivo.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((valorHora == null) ? 0 : valorHora.hashCode());
+		result = prime * result + ((valorServico == null) ? 0 : valorServico.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TipoEquipamento other = (TipoEquipamento) obj;
+		if (descricao == null) {
+			if (other.descricao != null)
+				return false;
+		} else if (!descricao.equals(other.descricao))
+			return false;
+		if (flagAtivo == null) {
+			if (other.flagAtivo != null)
+				return false;
+		} else if (!flagAtivo.equals(other.flagAtivo))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (valorHora == null) {
+			if (other.valorHora != null)
+				return false;
+		} else if (!valorHora.equals(other.valorHora))
+			return false;
+		if (valorServico == null) {
+			if (other.valorServico != null)
+				return false;
+		} else if (!valorServico.equals(other.valorServico))
+			return false;
+		return true;
+	}
 	
 }

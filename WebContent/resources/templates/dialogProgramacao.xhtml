@@ -1,0 +1,132 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<p:dialog modal="true" id="painel" header="Agendamento" position="center" widgetVar="eventDialog" styleClass="dialog90" rendered="#{autenticacaoFaces.telaAgendamento}">
+
+		<h:panelGrid columns="1" style="width:95%">
+
+			<h:panelGrid columns="3" columnClasses="coluna15, coluna40, coluna45" style="width: 100%">
+
+				<p:outputLabel for="tipoServico" value="Tipo do Serviço" />
+				<p:outputLabel for="cliente" value="Cliente" />
+				<p:outputLabel for="contrato" value="Contrato" />
+
+				<p:selectOneMenu id="tipoServico" value="#{agendaFaces.crudModel.tipoServico.id}" required="true" requiredMessage="Tipo do Serviço: Campo obrigatório" style="width:95%">
+					<f:selectItems value="#{agendaFaces.comboTiposServicos}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="cliente" value="#{agendaFaces.crudModel.contrato.cliente.id}" required="true" requiredMessage="Cliente: Campo obrigatório" style="width:99%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{agendaFaces.comboClientes}" />
+					<p:ajax event="change" listener="#{agendaFaces.atualizarContratos}" update="contrato" global="false" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="contrato" value="#{agendaFaces.crudModel.contrato.id}" required="true" requiredMessage="Contrato: Campo obrigatório" style="width:100%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{agendaFaces.crudModel.contrato.cliente.contratos}" var="i" itemLabel="#{i.descricao}" itemValue="#{i.id}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="5" columnClasses="coluna10, coluna10, coluna35, coluna30, coluna15" style="width: 100%">
+
+				<p:outputLabel for="dataInicial" value="Data Inicial" />
+				<p:outputLabel for="dataFinal" value="Data Final" />
+				<p:outputLabel for="equipamento" value="Equipamento" />
+				<p:outputLabel for="operador" value="Operador" />
+				<p:outputLabel for="valor" value="Valor" />
+
+				<p:calendar id="dataInicial" required="true" requiredMessage="Data Inicial: Valor obrigatório" value="#{agendaFaces.crudModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="16" />
+
+				<p:calendar id="dataFinal" required="true" requiredMessage="Data Final: Valor obrigatório" value="#{agendaFaces.crudModel.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="16" />
+
+				<p:selectOneMenu id="equipamento" value="#{agendaFaces.crudModel.equipamento.id}" required="true" requiredMessage="Equipamento: Campo obrigatório" style="width:98%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{agendaFaces.comboEquipamentos}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="operador" value="#{agendaFaces.crudModel.operador.id}" required="true" requiredMessage="Operador: Campo obrigatório" style="width:98%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{agendaFaces.comboOperadores}" />
+				</p:selectOneMenu>
+
+				<p:inputText id="valor" style="width: 95%; text-align: right" value="#{agendaFaces.crudModel.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor: Campo obrigatório">
+					<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+				</p:inputText>
+
+			</h:panelGrid>
+
+			<p:outputLabel for="obs" value="Observação" />
+			<p:inputTextarea id="obs" rows="" maxlength="1000" value="#{agendaFaces.crudModel.observacao}" styleClass="coluna99" />
+
+			<p:selectBooleanCheckbox id="ativo" value="#{agendaFaces.crudModel.flagConcluido}" itemLabel="Concluído?" />
+
+			<br />
+
+			<p:fieldset legend="Medições" style="width: 100%">
+
+				<h:panelGrid columns="1">
+
+					<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{agendaFacesaddMedicao}" process="@this" update="gridMedicao" />
+
+					<p:dataTable id="gridMedicao" value="#{agendaFaces.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="20" paginatorAlwaysVisible="false">
+
+						<p:column headerText="Código" styleClass="coluna5">
+							<div align="center">
+								<h:outputText value="#{linha.id}" />
+							</div>
+						</p:column>
+
+						<p:column headerText="Data Inicial" styleClass="coluna15">
+							<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+						</p:column>
+
+						<p:column headerText="Data Final" styleClass="coluna15">
+							<p:calendar value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+						</p:column>
+
+						<p:column headerText="Operador" styleClass="coluna45">
+							<p:selectOneMenu id="operadorMedicao" value="#{linha.operador.id}" required="true" requiredMessage="Operador Medição: Campo obrigatório" style="width:98%">
+								<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+								<f:selectItems value="#{agendaFaces.comboOperadores}" />
+							</p:selectOneMenu>
+						</p:column>
+
+						<p:column headerText="Valor" styleClass="coluna15">
+							<p:inputText id="valorMedicao" style="width: 90%; text-align: right" value="#{linha.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor Medição: Campo obrigatório">
+								<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+							</p:inputText>
+						</p:column>
+
+						<p:column headerText="Excluir" styleClass="coluna5">
+
+							<div align="center">
+
+								<p:commandLink action="#{agendaFaces.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update="gridMedicao @form">
+
+									<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+									<f:setPropertyActionListener target="#{agendaFaces.medicaoSelecionada}" value="#{linha}" />
+
+								</p:commandLink>
+
+							</div>
+
+						</p:column>
+
+					</p:dataTable>
+
+				</h:panelGrid>
+
+			</p:fieldset>
+
+			<p:commandButton id="btnInserir" value="Cadastrar" icon="salvar" action="#{agendaFaces.insertEvent}" style="height:28px; width: 110px;margin-left: 2px;" global="false" oncomplete="handleRequest(eventDialog, args);" rendered="#{!agendaFaces.flagAlterar and autenticacaoFaces.permissaoSelecionada.flagInserir}" />
+
+			<p:commandButton id="btnAlterar" value="Alterar" icon="salvar" action="#{agendaFaces.updateEvent}" style="height:28px; width: 110px;margin-left: 2px;" global="false" oncomplete="handleRequest(eventDialog, args);" rendered="#{agendaFaces.flagAlterar and autenticacaoFaces.permissaoSelecionada.flagAlterar}" />
+
+
+		</h:panelGrid>
+
+	</p:dialog>
+
+
+
+</ui:composition>

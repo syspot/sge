@@ -293,8 +293,9 @@ function isEmpty(campos){
 
 
 function handleRequest(widgerVar, args) {
-	if(args.valido) {      			  
+	if (args.valido) {      			  
 		widgerVar.hide();
+		myschedule.update();
 	}
 
 }

@@ -1,7 +1,9 @@
 package br.com.sge.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -158,5 +160,155 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+	
+	@Override
+	public List<Agenda> findByModel(String... fieldsOrderBy) {
+		return findByModel(null,fieldsOrderBy);
+	}
+	
+	@Override
+	public List<Agenda> findByModel(Map<String, Object> map,String... fieldsOrderBy) {
+
+		StringBuilder query = new StringBuilder();
+
+		query.append(" from Agenda a where 1=1 ");				
+
+		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getId())) {
+			query.append("and a.contrato.id = ? ");
+		}
+		
+		if (!TSUtil.isEmpty(equipamento) && !TSUtil.isEmpty(equipamento.getId())) {
+			query.append("and a.equipamento.id = ? ");
+		}
+		
+		if (!TSUtil.isEmpty(operador) && !TSUtil.isEmpty(operador.getId())) {
+			query.append("and a.operador.id = ? ");
+		}
+		
+		if (!TSUtil.isEmpty(flagConcluido)) {
+			query.append("and a.flagConcluido = ? ");
+		}
+
+		if (!TSUtil.isEmpty(dataInicial)) {
+			query.append("and a.dataInicial >= ? ");
+		}
+
+		if (!TSUtil.isEmpty(dataFinal)) {
+			query.append("and a.dataFinal <= ?");
+		}
+
+		List<Object> params = new ArrayList<Object>();
+		
+		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getId())) {
+			params.add(contrato);
+		}
+		
+		if (!TSUtil.isEmpty(equipamento) && !TSUtil.isEmpty(equipamento.getId())) {
+			params.add(equipamento);
+		}
+		
+		if (!TSUtil.isEmpty(operador) && !TSUtil.isEmpty(operador.getId())) {
+			params.add(operador);
+		}
+
+		if (!TSUtil.isEmpty(flagConcluido)) {
+			params.add(flagConcluido);
+		}
+
+		if (!TSUtil.isEmpty(dataInicial)) {
+			params.add(dataInicial);
+		}
+
+		if (!TSUtil.isEmpty(dataFinal)) {
+			params.add(dataFinal);
+		}
+
+		return super.find(query.toString(), "dataInicial", params.toArray());
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((contrato == null) ? 0 : contrato.hashCode());
+		result = prime * result + ((dataFinal == null) ? 0 : dataFinal.hashCode());
+		result = prime * result + ((dataInicial == null) ? 0 : dataInicial.hashCode());
+		result = prime * result + ((equipamento == null) ? 0 : equipamento.hashCode());
+		result = prime * result + ((flagConcluido == null) ? 0 : flagConcluido.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((medicoes == null) ? 0 : medicoes.hashCode());
+		result = prime * result + ((observacao == null) ? 0 : observacao.hashCode());
+		result = prime * result + ((operador == null) ? 0 : operador.hashCode());
+		result = prime * result + ((tipoServico == null) ? 0 : tipoServico.hashCode());
+		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Agenda other = (Agenda) obj;
+		if (contrato == null) {
+			if (other.contrato != null)
+				return false;
+		} else if (!contrato.equals(other.contrato))
+			return false;
+		if (dataFinal == null) {
+			if (other.dataFinal != null)
+				return false;
+		} else if (!dataFinal.equals(other.dataFinal))
+			return false;
+		if (dataInicial == null) {
+			if (other.dataInicial != null)
+				return false;
+		} else if (!dataInicial.equals(other.dataInicial))
+			return false;
+		if (equipamento == null) {
+			if (other.equipamento != null)
+				return false;
+		} else if (!equipamento.equals(other.equipamento))
+			return false;
+		if (flagConcluido == null) {
+			if (other.flagConcluido != null)
+				return false;
+		} else if (!flagConcluido.equals(other.flagConcluido))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (medicoes == null) {
+			if (other.medicoes != null)
+				return false;
+		} else if (!medicoes.equals(other.medicoes))
+			return false;
+		if (observacao == null) {
+			if (other.observacao != null)
+				return false;
+		} else if (!observacao.equals(other.observacao))
+			return false;
+		if (operador == null) {
+			if (other.operador != null)
+				return false;
+		} else if (!operador.equals(other.operador))
+			return false;
+		if (tipoServico == null) {
+			if (other.tipoServico != null)
+				return false;
+		} else if (!tipoServico.equals(other.tipoServico))
+			return false;
+		if (valor == null) {
+			if (other.valor != null)
+				return false;
+		} else if (!valor.equals(other.valor))
+			return false;
+		return true;
 	}
 }
