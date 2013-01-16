@@ -81,10 +81,21 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 
 	}
 
+	@Override
+	protected void prePersist() {
+		for (Medicao medicao : getCrudModel().getMedicoes()) {
+			medicao.setOperador(medicao.getOperadorTemp());
+		}
+	}
+
 	protected void posDetail() {
 
 		if (TSUtil.isEmpty(getCrudModel().getMedicoes())) {
-			getCrudModel().setMedicoes(new ArrayList<Medicao>());
+			getCrudModel().setMedicoes(new ArrayList<Medicao>());			
+		} else {
+			for (Medicao medicao : getCrudModel().getMedicoes()) {
+				medicao.setOperadorTemp(new Operador(medicao.getOperador().getId()));
+			}
 		}
 
 		if (TSUtil.isEmpty(getCrudModel().getEquipamento())) {
@@ -205,8 +216,9 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		Medicao medicao = new Medicao();
 		medicao.setAgenda(this.getCrudModel());
 		medicao.setOperador(new Operador());
+		medicao.setOperadorTemp(new Operador());
 		if (!TSUtil.isEmpty(getCrudModel().getOperador()) && !TSUtil.isEmpty(getCrudModel().getOperador().getId())) {
-			medicao.getOperador().setId(getCrudModel().getOperador().getId());
+			medicao.getOperadorTemp().setId(getCrudModel().getOperador().getId());
 		}
 		if (this.getCrudModel().getMedicoes().isEmpty()) {
 			medicao.setDataInicial(getCrudModel().getDataInicial());
@@ -219,27 +231,27 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 	public void excluirMedicao() {
 		this.getCrudModel().getMedicoes().remove(this.medicaoSelecionada);
 	}
-	
+
 	@Override
-	protected String insert() throws TSApplicationException {				
-		
+	protected String insert() throws TSApplicationException {
+
 		RequestContext context = RequestContext.getCurrentInstance();
-				
+
 		context.addCallbackParam("valido", true);
-		
+
 		return super.insert();
-				
+
 	}
-	
+
 	@Override
 	protected String update() throws TSApplicationException {
-		
+
 		RequestContext context = RequestContext.getCurrentInstance();
-		
+
 		context.addCallbackParam("valido", true);
-		
+
 		return super.update();
-		
+
 	}
 
 	public List<SelectItem> getComboContratos() {

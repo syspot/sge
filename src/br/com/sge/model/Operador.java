@@ -38,6 +38,10 @@ public class Operador extends TSActiveRecordAb<Operador>  {
 		this.flagAtivo = flagAtivo;
 	}
 	
+	public Operador(Long id) {
+		this.id = id;
+	}
+	
 	public Long getId() {
 		return TSUtil.tratarLong(id);
 	}

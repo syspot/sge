@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
@@ -31,10 +32,13 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 	@ManyToOne
 	@JoinColumn(name = "operador_id")
 	private Operador operador;
-	
+
+	@Transient
+	private Operador operadorTemp;
+
 	@Column(name = "data_inicial")
 	private Date dataInicial;
-	
+
 	@Column(name = "data_final")
 	private Date dataFinal;
 
@@ -50,7 +54,7 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 
 	public void setId(Long id) {
 		this.id = id;
-	}	
+	}
 
 	public Operador getOperador() {
 		return operador;
@@ -91,8 +95,8 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 	public void setAgenda(Agenda agenda) {
 		this.agenda = agenda;
 	}
-	
-	/*TODO Resolver bug na tela de agenda_medicao */
+
+	/* TODO Resolver bug na tela de agenda_medicao */
 
 	@Override
 	public int hashCode() {
@@ -147,5 +151,13 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 		} else if (!valor.equals(other.valor))
 			return false;
 		return true;
+	}
+
+	public Operador getOperadorTemp() {
+		return operadorTemp;
+	}
+
+	public void setOperadorTemp(Operador operadorTemp) {
+		this.operadorTemp = operadorTemp;
 	}
 }

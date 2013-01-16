@@ -66,11 +66,11 @@
 
 			<br />
 
-			<p:fieldset legend="Medições" style="width: 100%">
+			<p:fieldset id="fsMedicao" legend="Medições" style="width: 100%">
 
 				<h:panelGrid columns="1">
 
-					<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{mbean.addMedicao}" process="@this" update="gridMedicao" />
+					<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{mbean.addMedicao}"  update="gridMedicao" />
 
 					<p:dataTable id="gridMedicao" value="#{mbeanModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="20" paginatorAlwaysVisible="false">
 
@@ -89,7 +89,7 @@
 						</p:column>
 
 						<p:column headerText="Operador" styleClass="coluna45">
-							<p:selectOneMenu id="operadorMedicao" value="#{linha.operador.id}" required="true" requiredMessage="Operador Medição: Campo obrigatório" style="width:98%">
+							<p:selectOneMenu id="operadorMedicao" value="#{linha.operadorTemp.id}" required="true" requiredMessage="Operador Medição: Campo obrigatório" style="width:98%">
 								<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 								<f:selectItems value="#{mbean.comboOperadores}" />
 							</p:selectOneMenu>
@@ -105,7 +105,7 @@
 
 							<div align="center">
 
-								<p:commandLink action="#{mbean.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update="gridMedicao @form">
+								<p:commandLink action="#{mbean.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update="@form gridMedicao">
 
 									<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
 									<f:setPropertyActionListener target="#{mbean.medicaoSelecionada}" value="#{linha}" />

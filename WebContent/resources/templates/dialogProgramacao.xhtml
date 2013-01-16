@@ -66,7 +66,7 @@
 
 				<h:panelGrid columns="1">
 
-					<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{agendaFacesaddMedicao}" process="@this" update="gridMedicao" />
+					<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{agendaFacesaddMedicao}" update="gridMedicao" />
 
 					<p:dataTable id="gridMedicao" value="#{agendaFaces.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="20" paginatorAlwaysVisible="false">
 
@@ -85,7 +85,7 @@
 						</p:column>
 
 						<p:column headerText="Operador" styleClass="coluna45">
-							<p:selectOneMenu id="operadorMedicao" value="#{linha.operador.id}" required="true" requiredMessage="Operador Medição: Campo obrigatório" style="width:98%">
+							<p:selectOneMenu id="operadorMedicao" value="#{linha.operadorTemp.id}" required="true" requiredMessage="Operador Medição: Campo obrigatório" style="width:98%">
 								<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 								<f:selectItems value="#{agendaFaces.comboOperadores}" />
 							</p:selectOneMenu>
