@@ -1,6 +1,8 @@
 package br.com.sge.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -119,6 +121,55 @@ public class Cliente extends TSActiveRecordAb<Cliente> {
 
 	public void setContratos(List<Contrato> contratos) {
 		this.contratos = contratos;
+	}
+	
+	@Override
+	public List<Cliente> findByModel(String... fieldsOrderBy) {
+		return findByModel(null,fieldsOrderBy);
+	}
+	
+	@Override
+	public List<Cliente> findByModel(Map<String, Object> map,String... fieldsOrderBy) {
+
+		StringBuilder query = new StringBuilder();
+
+		query.append(" from Cliente c where 1=1 ");				
+
+		if (!TSUtil.isEmpty(nome)) {
+			query.append("and lower(c.nome) like ? ");
+		}
+		
+		if (!TSUtil.isEmpty(tipoIdentificador) && !TSUtil.isEmpty(tipoIdentificador.getId())) {
+			query.append("and c.tipoIdentificador.id = ? ");
+		}
+		
+		if (!TSUtil.isEmpty(identificador)) {
+			query.append("and lower(c.identificador) like ? ");
+		}
+		
+		if (!TSUtil.isEmpty(flagAtivo)) {
+			query.append("and c.flagAtivo = ? ");
+		}
+		
+		List<Object> params = new ArrayList<Object>();
+		
+		if (!TSUtil.isEmpty(nome) ) {
+			params.add("%" + nome.toLowerCase() + "%");
+		}
+		
+		if (!TSUtil.isEmpty(tipoIdentificador) && !TSUtil.isEmpty(tipoIdentificador.getId())) {
+			params.add(tipoIdentificador.getId());
+		}
+		
+		if (!TSUtil.isEmpty(identificador)) {
+			params.add("%" + identificador.toLowerCase() + "%");
+		}
+
+		if (!TSUtil.isEmpty(flagAtivo)) {
+			params.add(flagAtivo);
+		}
+
+		return super.find(query.toString(), "nome", params.toArray());
 	}
 
 	@Override

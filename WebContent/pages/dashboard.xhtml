@@ -9,7 +9,7 @@
 		<title>SGE</title>
 		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/geral.css" />
 		<script src="#{request.contextPath}/resources/js/funcoes.js" type="text/javascript" />
-	</h:head>
+	</h:head>	
 
 	<h:body style="font-size: 12px">
 
@@ -23,7 +23,7 @@
 
 		<p:layout fullPage="true">
 
-			<p:layoutUnit position="west" size="230" resizable="true" header="Menu">
+			<p:layoutUnit position="west" size="180" resizable="true" header="Menu">
 				<ui:include id="uiMenu" src="/pages/menu.xhtml" />
 			</p:layoutUnit>
 
@@ -67,7 +67,11 @@
 		</p:layout>
 
 		<h:form id="formDialog">
-			<ui:include src="../resources/templates/dialogProgramacao.xhtml" />
+			<ui:include src="../resources/templates/dialogProgramacao.xhtml" />					
+		</h:form>
+		
+		<h:form id="formDialogPesquisa">			
+			<ui:include src="../resources/templates/dialogPesquisaProgramacao.xhtml" />
 		</h:form>
 
 	</h:body>

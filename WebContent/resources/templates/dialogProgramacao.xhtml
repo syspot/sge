@@ -2,7 +2,7 @@
 
 	<p:dialog modal="true" id="painel" header="Agendamento" position="center" widgetVar="eventDialog" styleClass="dialog90" rendered="#{autenticacaoFaces.telaAgendamento}">
 
-		<h:panelGrid columns="1" style="width:95%">
+		<h:panelGrid columns="1" style="width:97%">
 
 			<h:panelGrid columns="3" columnClasses="coluna15, coluna40, coluna45" style="width: 100%">
 
@@ -12,6 +12,7 @@
 
 				<p:selectOneMenu id="tipoServico" value="#{agendaFaces.crudModel.tipoServico.id}" required="true" requiredMessage="Tipo do Serviço: Campo obrigatório" style="width:95%">
 					<f:selectItems value="#{agendaFaces.comboTiposServicos}" />
+					<p:ajax event="change" listener="#{agendaFaces.atualizarValorAgenda}" process="tipoServico dataInicial dataFinal @this" update="valor" global="false" />
 				</p:selectOneMenu>
 
 				<p:selectOneMenu id="cliente" value="#{agendaFaces.crudModel.contrato.cliente.id}" required="true" requiredMessage="Cliente: Campo obrigatório" style="width:99%">
@@ -35,13 +36,20 @@
 				<p:outputLabel for="operador" value="Operador" />
 				<p:outputLabel for="valor" value="Valor" />
 
-				<p:calendar id="dataInicial" required="true" requiredMessage="Data Inicial: Valor obrigatório" value="#{agendaFaces.crudModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="16" />
+				<p:calendar id="dataInicial" required="true" requiredMessage="Data Inicial: Valor obrigatório" value="#{agendaFaces.crudModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="16">
+					<p:ajax event="change" listener="#{agendaFaces.atualizarComboOperacoes}" process="@this dataFinal" update="equipamento operador" global="false" />
+					<p:ajax event="change" listener="#{agendaFaces.atualizarValorAgenda}" process="tipoServico dataInicial dataFinal @this" update="valor" global="false" />
+				</p:calendar>
 
-				<p:calendar id="dataFinal" required="true" requiredMessage="Data Final: Valor obrigatório" value="#{agendaFaces.crudModel.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="16" />
+				<p:calendar id="dataFinal" required="true" requiredMessage="Data Final: Valor obrigatório" value="#{agendaFaces.crudModel.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="16">
+					<p:ajax event="change" listener="#{agendaFaces.atualizarComboOperacoes}" process="dataInicial @this" update="equipamento operador" global="false" />
+					<p:ajax event="change" listener="#{agendaFaces.atualizarValorAgenda}" process="tipoServico dataInicial dataFinal @this" update="valor" global="false" />
+				</p:calendar>
 
 				<p:selectOneMenu id="equipamento" value="#{agendaFaces.crudModel.equipamento.id}" required="true" requiredMessage="Equipamento: Campo obrigatório" style="width:98%">
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 					<f:selectItems value="#{agendaFaces.comboEquipamentos}" />
+					<p:ajax event="change" listener="#{agendaFaces.atualizarValorAgenda}" process="tipoServico dataInicial dataFinal @this" update="valor" global="false" />
 				</p:selectOneMenu>
 
 				<p:selectOneMenu id="operador" value="#{agendaFaces.crudModel.operador.id}" required="true" requiredMessage="Operador: Campo obrigatório" style="width:98%">
@@ -49,7 +57,7 @@
 					<f:selectItems value="#{agendaFaces.comboOperadores}" />
 				</p:selectOneMenu>
 
-				<p:inputText id="valor" style="width: 95%; text-align: right" value="#{agendaFaces.crudModel.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor: Campo obrigatório">
+				<p:inputText id="valor" style="width: 95%; text-align: right" value="#{agendaFaces.crudModel.valor}" onkeyup="return mascaraMoeda(this)">
 					<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
 				</p:inputText>
 
@@ -62,13 +70,17 @@
 
 			<br />
 
-			<p:fieldset legend="Medições" style="width: 100%">
+			<p:fieldset id="fsMedicao" legend="Medições" style="width: 100%">
 
 				<h:panelGrid columns="1">
 
-					<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{agendaFacesaddMedicao}" update="gridMedicao" />
+					<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{agendaFaces.addMedicao}" update="gridMedicao" />
 
-					<p:dataTable id="gridMedicao" value="#{agendaFaces.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="20" paginatorAlwaysVisible="false">
+					<p:dataTable id="gridMedicao" value="#{agendaFaces.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="20" paginatorAlwaysVisible="false" rowIndexVar="i">
+
+						<p:column headerText="#">
+        					#{i+1}
+    					</p:column>
 
 						<p:column headerText="Código" styleClass="coluna5">
 							<div align="center">
@@ -77,31 +89,43 @@
 						</p:column>
 
 						<p:column headerText="Data Inicial" styleClass="coluna15">
-							<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+							<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Inicial Medição #{i}: Campo obrigatório">
+								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+							</p:calendar>
 						</p:column>
 
 						<p:column headerText="Data Final" styleClass="coluna15">
-							<p:calendar value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+
+							<p:calendar value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Final Medição #{i}: Campo obrigatório">
+								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+							</p:calendar>
+
 						</p:column>
 
-						<p:column headerText="Operador" styleClass="coluna45">
-							<p:selectOneMenu id="operadorMedicao" value="#{linha.operadorTemp.id}" required="true" requiredMessage="Operador Medição: Campo obrigatório" style="width:98%">
+						<p:column headerText="Operador" styleClass="coluna25">
+							<p:selectOneMenu id="operadorMedicao" value="#{linha.operadorTemp.id}" required="true" requiredMessage="Operador Medição #{i}: Campo obrigatório" style="width:98%">
 								<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-								<f:selectItems value="#{agendaFaces.comboOperadores}" />
+								<f:selectItems value="#{agendaFaces.comboOperadoresPesquisa}" />
 							</p:selectOneMenu>
 						</p:column>
 
-						<p:column headerText="Valor" styleClass="coluna15">
-							<p:inputText id="valorMedicao" style="width: 90%; text-align: right" value="#{linha.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor Medição: Campo obrigatório">
-								<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
-							</p:inputText>
+						<p:column headerText="Obs." styleClass="coluna25">
+							<p:inputTextarea rows="2" value="#{linha.observacao}" style="width: 95%" autoResize="false" />
+						</p:column>
+
+						<p:column id="colValor#{i}" headerText="Valor" styleClass="coluna15">
+							<p:outputPanel id="teste" layout="block" autoUpdate="true">
+								<p:inputText id="valorMedicao#{i}" style="width: 90%; text-align: right" value="#{linha.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor Medição #{i}: Campo obrigatório">
+									<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+								</p:inputText>
+							</p:outputPanel>
 						</p:column>
 
 						<p:column headerText="Excluir" styleClass="coluna5">
 
 							<div align="center">
 
-								<p:commandLink action="#{agendaFaces.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update="gridMedicao @form">
+								<p:commandLink action="#{agendaFaces.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update="@form gridMedicao">
 
 									<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
 									<f:setPropertyActionListener target="#{agendaFaces.medicaoSelecionada}" value="#{linha}" />

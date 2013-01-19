@@ -1,5 +1,9 @@
 package br.com.sge.model;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -84,6 +88,26 @@ public class Operador extends TSActiveRecordAb<Operador>  {
 	
 	public String getSituacao() {		
 		return (flagAtivo.equals(Boolean.TRUE)?"ATIVO":"INATIVO");
+	}
+	
+	public List<Operador> Disponiveis(Long operadorID, Date dataInicial, Date dataFinal) {		
+
+		List<Object> lista = new ArrayList<Object>();
+		
+		if (TSUtil.isEmpty(operadorID)) {
+			operadorID = 0L;
+		}
+
+		String query = "SELECT * FROM OPERADOR O WHERE (FLAG_ATIVO AND NOT EXISTS (SELECT 1 FROM AGENDA A WHERE A.OPERADOR_ID = O.ID AND FLAG_CONCLUIDO = FALSE AND (A.DATA_INICIAL BETWEEN ? AND ? OR A.DATA_FINAL BETWEEN ? AND ?))) OR ID = ? ORDER BY O.NOME";
+
+		lista.add(dataInicial);
+		lista.add(dataFinal);
+		lista.add(dataInicial);
+		lista.add(dataFinal);
+		lista.add(operadorID);
+
+		return findBySQL(query, lista.toArray());
+
 	}
 
 	@Override

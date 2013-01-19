@@ -43,6 +43,8 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 	private Date dataFinal;
 
 	private Double valor;
+	
+	private String observacao;
 
 	public Medicao() {
 
@@ -95,8 +97,6 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 	public void setAgenda(Agenda agenda) {
 		this.agenda = agenda;
 	}
-
-	/* TODO Resolver bug na tela de agenda_medicao */
 
 	@Override
 	public int hashCode() {
@@ -159,5 +159,13 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 
 	public void setOperadorTemp(Operador operadorTemp) {
 		this.operadorTemp = operadorTemp;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
 	}
 }

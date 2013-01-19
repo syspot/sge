@@ -1,5 +1,10 @@
 package br.com.sge.model;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -108,6 +113,83 @@ public class Equipamento extends TSActiveRecordAb<Equipamento> {
 
 	public void setIdentificador(String identificador) {
 		this.identificador = identificador;
+	}
+
+	@Override
+	public List<Equipamento> findByModel(String... fieldsOrderBy) {
+		return findByModel(null, fieldsOrderBy);
+	}
+
+	@Override
+	public List<Equipamento> findByModel(Map<String, Object> map, String... fieldsOrderBy) {
+
+		StringBuilder query = new StringBuilder();
+
+		query.append(" from Equipamento e where 1=1 ");
+
+		if (!TSUtil.isEmpty(flagAtivo)) {
+			query.append("and e.flagAtivo = ? ");
+		}
+
+		if (!TSUtil.isEmpty(tipoEquipamento) && !TSUtil.isEmpty(tipoEquipamento.getId())) {
+			query.append("and e.tipoEquipamento.id = ? ");
+		}
+
+		if (!TSUtil.isEmpty(descricao)) {
+			query.append("and lower(e.descricao) like ?");
+		}
+
+		if (!TSUtil.isEmpty(identificador)) {
+			query.append("and lower(e.identificador) like ?");
+		}
+
+		if (!TSUtil.isEmpty(fornecedor) && !TSUtil.isEmpty(fornecedor.getId())) {
+			query.append("and e.fornecedor.id = ? ");
+		}
+
+		List<Object> params = new ArrayList<Object>();
+
+		if (!TSUtil.isEmpty(flagAtivo)) {
+			params.add(flagAtivo);
+		}
+
+		if (!TSUtil.isEmpty(tipoEquipamento) && !TSUtil.isEmpty(tipoEquipamento.getId())) {
+			params.add(tipoEquipamento.getId());
+		}
+
+		if (!TSUtil.isEmpty(descricao)) {
+			params.add("%" + descricao.toLowerCase() + "%");
+		}
+
+		if (!TSUtil.isEmpty(identificador)) {
+			params.add("%" + identificador.toLowerCase() + "%");
+		}
+
+		if (!TSUtil.isEmpty(fornecedor) && !TSUtil.isEmpty(fornecedor.getId())) {
+			params.add(fornecedor.getId());
+		}
+
+		return super.find(query.toString(), "descricao", params.toArray());
+	}
+
+	public List<Equipamento> Disponiveis(Long equipamentoID, Date dataInicial, Date dataFinal) {		
+
+		List<Object> lista = new ArrayList<Object>();
+		
+		if (TSUtil.isEmpty(equipamentoID)) {
+			equipamentoID = 0L;
+		}
+
+		String query = "SELECT * FROM EQUIPAMENTO E WHERE (FLAG_ATIVO AND NOT EXISTS (SELECT 1 FROM AGENDA A WHERE A.EQUIPAMENTO_ID = E.ID AND FLAG_CONCLUIDO = FALSE AND (A.DATA_INICIAL BETWEEN ? AND ? OR A.DATA_FINAL BETWEEN ? AND ?))) OR ID = ? ORDER BY E.DESCRICAO";
+
+		lista.add(dataInicial);
+		lista.add(dataFinal);
+		lista.add(dataInicial);
+		lista.add(dataFinal);	
+		lista.add(equipamentoID);
+
+		return findBySQL(query, lista.toArray());
+
 	}
 
 	@Override

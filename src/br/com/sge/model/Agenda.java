@@ -15,8 +15,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.sun.istack.internal.Nullable;
 
 import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
@@ -54,12 +57,13 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 
 	private Double valor;
 
-	@Column(name = "flag_concluido")
+	@Column(name = "flag_concluido")	
 	private Boolean flagConcluido;
 	
 	private String observacao;
 	
-	@OneToMany(mappedBy = "agenda", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)	
+	@OneToMany(mappedBy = "agenda", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
+	@OrderBy("dataInicial")
 	private List<Medicao> medicoes;
 
 	public Agenda() {
@@ -174,8 +178,16 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 
 		query.append(" from Agenda a where 1=1 ");				
 
+		if (!TSUtil.isEmpty(tipoServico) && !TSUtil.isEmpty(tipoServico.getId())) {
+			query.append("and a.tipoServico.id = ? ");
+		}
+		
 		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getId())) {
 			query.append("and a.contrato.id = ? ");
+		}
+		
+		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getCliente()) && !TSUtil.isEmpty(contrato.getCliente().getId())) {
+			query.append("and a.contrato.cliente.id = ? ");
 		}
 		
 		if (!TSUtil.isEmpty(equipamento) && !TSUtil.isEmpty(equipamento.getId())) {
@@ -200,16 +212,24 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 
 		List<Object> params = new ArrayList<Object>();
 		
+		if (!TSUtil.isEmpty(tipoServico) && !TSUtil.isEmpty(tipoServico.getId())) {
+			params.add(tipoServico.getId());
+		}
+		
 		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getId())) {
-			params.add(contrato);
+			params.add(contrato.getId());
+		}
+		
+		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getCliente()) && !TSUtil.isEmpty(contrato.getCliente().getId())) {
+			params.add(contrato.getCliente().getId());
 		}
 		
 		if (!TSUtil.isEmpty(equipamento) && !TSUtil.isEmpty(equipamento.getId())) {
-			params.add(equipamento);
+			params.add(equipamento.getId());
 		}
 		
 		if (!TSUtil.isEmpty(operador) && !TSUtil.isEmpty(operador.getId())) {
-			params.add(operador);
+			params.add(operador.getId());
 		}
 
 		if (!TSUtil.isEmpty(flagConcluido)) {

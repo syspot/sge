@@ -1,14 +1,16 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
 
-	<h:form id="formAgenda">
+	<h:form id="formAgenda">		
 
-		<h:panelGrid columns="1" style="width: 100%">		
+		<h:panelGrid columns="1" style="width: 100%">
 
-			<p:panel style="width: 95%">
+			<p:commandButton value="Filtrar Agenda" icon="pesquisar" type="button" onclick="findDialog.show()" style="height:28px; width: 150px;" />
+
+			<p:panel style="width: 99%">
 
 				<p:schedule id="schedule" value="#{agendaFaces.lazyEventModel}" editable="true" widgetVar="myschedule" allDaySlot="true" draggable="false" resizable="false" view="agendaWeek" locale="pt_BR" timeZone="America/Recife" axisFormat="HH:00">
 
-					<p:ajax event="dateSelect" listener="#{agendaFaces.onDateSelect}" oncomplete="eventDialog.show()" update=":formDialog:painel"  />
+					<p:ajax event="dateSelect" listener="#{agendaFaces.onDateSelect}" oncomplete="eventDialog.show()" update=":formDialog:painel" />
 					<p:ajax event="eventSelect" listener="#{agendaFaces.onEventSelect}" oncomplete="eventDialog.show()" update=":formDialog:painel" />
 
 				</p:schedule>

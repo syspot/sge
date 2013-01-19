@@ -1,0 +1,76 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="${agendaFaces}" />
+	<ui:param name="mbeanPesquisaModel" value="${agendaFaces.crudPesquisaModel}" />
+
+	<p:dialog modal="true" id="painelPesquisa" header="Pesquisa Agenda" position="center" widgetVar="findDialog" style="width: 90%;height: 300px" rendered="#{autenticacaoFaces.telaAgendamento}">
+
+		<p:outputPanel id="xxx" layout="block">
+		
+		<h:panelGrid id="pnlPesquisa" columns="1" style="width:100%">
+
+			<h:panelGrid columns="3" columnClasses="coluna15, coluna40, coluna45" style="width: 100%">
+
+				<p:outputLabel for="tipoServicoPesquisa" value="Tipo do Serviço" />
+				<p:outputLabel for="clientePesquisa" value="Cliente" />
+				<p:outputLabel for="contratoPesquisa" value="Contrato" />
+
+				<p:selectOneMenu id="tipoServicoPesquisa" value="#{mbeanPesquisaModel.tipoServico.id}" style="width:95%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboTiposServicos}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="clientePesquisa" value="#{mbeanPesquisaModel.contrato.cliente.id}" style="width:99%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboClientes}" />
+					<p:ajax event="change" listener="#{mbean.atualizarContratosPesquisa}" update="contratoPesquisa" global="false" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="contratoPesquisa" value="#{mbeanPesquisaModel.contrato.id}" style="width:100%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbeanPesquisaModel.contrato.cliente.contratos}" var="i" itemLabel="#{i.descricao}" itemValue="#{i.id}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="3" columnClasses="coluna40, coluna45, coluna15" style="width: 100%">
+
+				<p:outputLabel for="equipamentoPesquisa" value="Equipamento" />
+				<p:outputLabel for="operadorPesquisa" value="Operador" />
+				<p:outputLabel for="situacaoPesquisa" value="Situação" />
+
+				<p:selectOneMenu id="equipamentoPesquisa" value="#{mbeanPesquisaModel.equipamento.id}" style="width:98%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboEquipamentosPesquisa}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="operadorPesquisa" value="#{mbeanPesquisaModel.operador.id}" style="width:98%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboOperadoresPesquisa}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="situacaoPesquisa" value="#{mbeanPesquisaModel.flagConcluido}" style="width:98%">					
+					<f:selectItem itemLabel="Todas" itemValue="#{null}" />
+					<f:selectItem itemLabel="Em Aberto" itemValue="#{false}" />
+					<f:selectItem itemLabel="Concluído" itemValue="#{true}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" columnClasses="coluna10, coluna90" style="width:100%">
+
+				<p:commandButton value="Filtrar" icon="pesquisar" onclick="findDialog.hide();schedule.update();" style="height:28px; width: 130px;" />
+
+				<p:commandButton value="Limpar Filtro" icon="novo" action="#{mbean.limparPesquisa}" onclick="findDialog.hide();schedule.update();" process="painelPesquisa" style="height:28px; width: 140px;" />
+
+			</h:panelGrid>
+
+		</h:panelGrid>
+		
+		</p:outputPanel>
+
+	</p:dialog>
+
+
+
+</ui:composition>
