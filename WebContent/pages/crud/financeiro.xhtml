@@ -1,0 +1,128 @@
+<ui:composition template="/resources/templates/templateCRUDFinanceiro.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="${financeiroFaces}" />
+	<ui:param name="mbeanModel" value="${financeiroFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${financeiroFaces.crudPesquisaModel}" />
+
+	<ui:define name="cadastro">
+
+		<h:panelGrid columns="1" style="width:95%">
+
+			<h:panelGrid columns="4" columnClasses="coluna20, coluna65, coluna10, coluna5" style="width: 95%">
+				<p:outputLabel for="tipoTransacao" value="Transação" />
+				<p:outputLabel for="fonte" value="Fonte" />
+				<p:outputLabel for="dataLancamento" value="Lançamento" />
+				<p:outputLabel for="agenda" value="Medição" />
+
+				<p:selectOneMenu id="tipoTransacao" value="#{mbeanModel.tipoTransacao.id}" required="true" requiredMessage="Tipo de Transacao: Campo obrigatório" style="width:95%">
+					<f:selectItems value="#{mbean.comboTiposTransacoes}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="fonte" value="#{mbeanModel.fonte.id}" required="true" requiredMessage="Fonte: Campo obrigatório" style="width:98%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboFontes}" />
+				</p:selectOneMenu>
+
+				<p:calendar id="dataLancamento" value="#{mbeanModel.dataLancamento}" navigator="true" style="width: 100%" required="true" requiredMessage="Data de Lançamento: Valor obrigatório" pattern="dd/MM/yyyy HH:mm" size="15" />
+
+				<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 95%">
+					<p:inputText id="agenda" value="#{mbeanModel.agenda.id}" disabled="true" style="text-align: right" />
+					<p:commandButton icon="ui-icon-search" action="#{agendaFaces.detailEvent}" oncomplete="eventDialog.show();pnl.show()" process="agenda" update=":formDialog:painel">
+						<f:setPropertyActionListener target="#{agendaFaces.crudModel.id}" value="mbeanModel.agenda.id" />
+					</p:commandButton>
+				</h:panelGrid>
+
+			</h:panelGrid>
+
+			<p:outputLabel for="agenda" value="Descrição" />
+			<p:inputTextarea row="5" value="#{mbeanModel.descricao}" maxlength="1000" style="width: 100%" />
+
+			<h:panelGrid columns="2" columnClasses="coluna10, coluna90" style="width: 95%">
+
+				<p:outputLabel for="valor" value="Valor" />
+
+				<p:outputLabel for="dataPagamento" value="Pagamento" />
+
+				<p:inputText id="valor" style="width: 100px; text-align: right" value="#{mbeanModel.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor: Campo obrigatório">
+					<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+				</p:inputText>
+
+				<p:calendar id="dataPagamento" value="#{mbeanModel.dataPagamento}" navigator="true" style="width: 100%" pattern="dd/MM/yyyy" size="11" />
+
+			</h:panelGrid>
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" style="width:90%">
+
+			<h:panelGrid columns="3" columnClasses="coluna15, coluna40, coluna45" style="width: 95%">
+
+				<p:outputLabel for="transacaoPesquisa" value="Transação" />
+				<p:outputLabel for="clientePesquisa" value="Cliente" />
+				<p:outputLabel for="contratoPesquisa" value="Contrato" />
+
+				<p:selectOneMenu id="transacaoPesquisa" value="#{mbeanPesquisaModel.tipoTransacao.id}" style="width:95%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboTiposTransacoes}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="clientePesquisa" value="#{mbeanPesquisaModel.agenda.contrato.cliente.id}" style="width:99%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboClientes}" />
+					<p:ajax event="change" listener="#{mbean.atualizarContratosPesquisa}" update="contratoPesquisa" global="false" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="contratoPesquisa" value="#{mbeanPesquisaModel.agenda.contrato.id}" style="width:100%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbeanPesquisaModel.agenda.contrato.cliente.contratos}" var="i" itemLabel="#{i.descricao}" itemValue="#{i.id}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="6" columnClasses="coluna30, coluna5, coluna5, coluna5, coluna5, coluna10" style="width: 95%">
+
+				<p:outputLabel for="fontePesquisa" value="Fonte" />
+				<p:outputLabel for="dataInicialLancamentoPesquisa" value="Data Inicial Lançamento" />
+				<p:outputLabel for="dataFinalLancamentoPesquisa" value="Data Final Lançamento" />
+				<p:outputLabel for="dataInicialPagamentoPesquisa" value="Data Inicial Pagamento" />
+				<p:outputLabel for="dataFinalPagamentoPesquisa" value="Data Final Pagamento" />
+				<p:outputLabel for="situacaoPesquisa" value="Situação" />
+
+				<p:selectOneMenu id="fontePesquisa" value="#{mbeanPesquisaModel.fonte.id}" style="width:95%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboFontes}" />
+				</p:selectOneMenu>
+				
+				<p:calendar id="dataInicialLancamentoPesquisa" value="#{mbeanPesquisaModel.dataInicialLancamento}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+
+				<p:calendar id="dataFinalLancamentoPesquisa" value="#{mbeanPesquisaModel.dataFinalLancamento}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+
+				<p:calendar id="dataInicialPagamentoPesquisa" value="#{mbeanPesquisaModel.dataInicialPagamento}" navigator="true" pattern="dd/MM/yyyy" size="15" />
+
+				<p:calendar id="dataFinalPagamentoPesquisa" value="#{mbeanPesquisaModel.dataFinalPagamento}" navigator="true" pattern="dd/MM/yyyy" size="15" />				
+
+				<p:selectOneMenu id="situacaoPesquisa" value="#{mbeanPesquisaModel.flagPago}" style="width:150px">
+					<f:selectItem itemLabel="Todas" itemValue="#{null}" />
+					<f:selectItem itemLabel="Em Aberto" itemValue="#{false}" />
+					<f:selectItem itemLabel="Pago" itemValue="#{true}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Situação" styleClass="coluna10">
+			<h:outputText value="#{linha.situacao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

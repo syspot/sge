@@ -2,42 +2,6 @@
 
 	<p:tabView id="tabview" dynamic="false" activeIndex="#{mbean.tabIndex}">
 
-		<p:tab id="tabCadastro" title="Cadastro">
-
-			<h:form id="formCadastro" prependId="false">
-
-				<p:outputPanel id="opCadastro" layout="block" autoUpdate="#{empty autoUpdateCadastro ? false : autoUpdateCadastro}" style="width: 98%;">
-
-					<h:panelGrid columns="1" style="width: 100%">						
-
-						<ui:include src="comandoCRUDLimpar.xhtml" />
-						
-						<p:fieldset legend="Informações de Cadastro" toggleable="true" collapsed="true" style="width: 97.5%">
-							<h:panelGrid width="100" columns="1" >
-								<h:outputLabel value="Chave" />								
-								<h:inputText disabled="true" style="width: 95%;" value="#{mbeanModel.id}" />								
-							</h:panelGrid>
-							<ui:insert name="informacoes" />
-						</p:fieldset>
-
-						<p:fieldset style="width: 97.5%">
-
-							<ui:insert name="cadastro" />
-
-						</p:fieldset>
-
-						<ui:include src="comandoCRUDCadastro.xhtml" />
-
-					</h:panelGrid>
-
-				</p:outputPanel>
-
-			</h:form>
-
-		</p:tab>
-
-		<ui:insert name="tabsMeio" />
-
 		<p:tab id="tabPesquisa" title="Pesquisa">
 
 			<h:form id="formPesquisa" prependId="false">
@@ -107,6 +71,44 @@
 			</h:form>
 
 		</p:tab>
+
+		<ui:insert name="tabsMeio" />
+
+		<p:tab id="tabCadastro" title="Cadastro">
+
+			<h:form id="formCadastro" prependId="false">
+
+				<p:outputPanel id="opCadastro" layout="block" autoUpdate="#{empty autoUpdateCadastro ? false : autoUpdateCadastro}" style="width: 98%;">
+
+					<h:panelGrid columns="1" style="width: 100%">
+
+						<ui:include src="comandoCRUDLimpar.xhtml" />
+
+						<p:fieldset legend="Informações de Cadastro" toggleable="true" collapsed="true" style="width: 97.5%">
+							<h:panelGrid width="100" columns="1">
+								<h:outputLabel value="Chave" />
+								<h:inputText disabled="true" style="width: 95%;" value="#{mbeanModel.id}" />
+							</h:panelGrid>
+							<ui:insert name="informacoes" />
+						</p:fieldset>
+
+						<p:fieldset style="width: 97.5%">
+
+							<ui:insert name="cadastro" />
+
+						</p:fieldset>
+
+						<ui:include src="comandoCRUDCadastro.xhtml" />
+
+					</h:panelGrid>
+
+				</p:outputPanel>
+
+			</h:form>
+
+		</p:tab>
+
+
 
 		<ui:insert name="tabsfim" />
 

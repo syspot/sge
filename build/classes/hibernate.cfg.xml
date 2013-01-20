@@ -33,6 +33,8 @@
 		<mapping class="br.com.sge.model.Equipamento" />
 		<mapping class="br.com.sge.model.Agenda" />
 		<mapping class="br.com.sge.model.Medicao" />
+		<mapping class="br.com.sge.model.Financeiro" />
+		<mapping class="br.com.sge.model.TipoTransacao" />
 		
 
 	</session-factory>

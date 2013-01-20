@@ -250,8 +250,6 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 
 	public void onDateSelect(DateSelectEvent selectEvent) {
 
-		RequestContext context = RequestContext.getCurrentInstance();
-
 		limpar();
 
 		getCrudModel().setDataInicial(selectEvent.getDate());
@@ -259,8 +257,6 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		event = new DefaultScheduleEvent(null,
 
 		selectEvent.getDate(), null, false);
-
-		context.addCallbackParam("valido", true);
 
 	}
 

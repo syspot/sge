@@ -2,39 +2,34 @@ package br.com.sge.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
 
 @Entity
-@Table(name = "fonte")
-public class Fonte extends TSActiveRecordAb<Fonte> {
+@Table(name = "tipo_transacao")
+public class TipoTransacao extends TSActiveRecordAb<TipoTransacao>  {
 
-	@Id
-	@SequenceGenerator(name = "FONTE_ID_SEQ", sequenceName = "fonte_id_seq", allocationSize = 1)
-	@GeneratedValue(generator = "FONTE_ID_SEQ", strategy = GenerationType.SEQUENCE)
+	@Id	
 	private Long id;
-
-	private String descricao;
-
-	@Column(name = "flag_ativo")
-	private Boolean flagAtivo;
-
-	public Fonte() {
-
+	
+	private String descricao;	
+	
+	private String css;
+	
+	@Column(name="css_pago")
+	private String cssPago;
+	
+	public TipoTransacao() {
+		
 	}
-
-	public Fonte(Boolean flagAtivo) {
-
-		this.flagAtivo = flagAtivo;
-
+	
+	public TipoTransacao(Long id) {
+		this.id = id;
 	}
-
+	
 	public Long getId() {
 		return TSUtil.tratarLong(id);
 	}
@@ -51,24 +46,29 @@ public class Fonte extends TSActiveRecordAb<Fonte> {
 		this.descricao = descricao;
 	}
 
-	public Boolean getFlagAtivo() {
-		return flagAtivo;
+	public String getCss() {
+		return css;
 	}
 
-	public void setFlagAtivo(Boolean flagAtivo) {
-		this.flagAtivo = flagAtivo;
+	public void setCss(String css) {
+		this.css = css;
 	}
 
-	public String getSituacao() {
-		return (flagAtivo.equals(Boolean.TRUE) ? "ATIVO" : "INATIVO");
+	public String getCssPago() {
+		return cssPago;
+	}
+
+	public void setCssPago(String cssPago) {
+		this.cssPago = cssPago;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((css == null) ? 0 : css.hashCode());
+		result = prime * result + ((cssPago == null) ? 0 : cssPago.hashCode());
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result + ((flagAtivo == null) ? 0 : flagAtivo.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
@@ -81,16 +81,21 @@ public class Fonte extends TSActiveRecordAb<Fonte> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Fonte other = (Fonte) obj;
+		TipoTransacao other = (TipoTransacao) obj;
+		if (css == null) {
+			if (other.css != null)
+				return false;
+		} else if (!css.equals(other.css))
+			return false;
+		if (cssPago == null) {
+			if (other.cssPago != null)
+				return false;
+		} else if (!cssPago.equals(other.cssPago))
+			return false;
 		if (descricao == null) {
 			if (other.descricao != null)
 				return false;
 		} else if (!descricao.equals(other.descricao))
-			return false;
-		if (flagAtivo == null) {
-			if (other.flagAtivo != null)
-				return false;
-		} else if (!flagAtivo.equals(other.flagAtivo))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -99,5 +104,5 @@ public class Fonte extends TSActiveRecordAb<Fonte> {
 			return false;
 		return true;
 	}
-
+	
 }

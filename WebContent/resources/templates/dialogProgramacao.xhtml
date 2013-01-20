@@ -1,8 +1,8 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
 
-	<p:dialog modal="true" id="painel" header="Agendamento" position="center" widgetVar="eventDialog" styleClass="dialog90" rendered="#{autenticacaoFaces.telaAgendamento}">
+	<p:dialog modal="true" id="painel" header="Agendamento" position="center" widgetVar="eventDialog" styleClass="dialog90" rendered="#{autenticacaoFaces.telaAgendamento or autenticacaoFaces.telaFinanceiro}">
 
-		<h:panelGrid columns="1" style="width:97%">
+		<h:panelGrid id="pnlProgramacao" columns="1" style="width:97%">
 
 			<h:panelGrid columns="3" columnClasses="coluna15, coluna40, coluna45" style="width: 100%">
 
@@ -70,13 +70,13 @@
 
 			<br />
 
-			<p:fieldset id="fsMedicao" legend="Medições" style="width: 100%">
+			<p:fieldset id="fsMedicao" legend="Medições" style="width: 97%">
 
 				<h:panelGrid columns="1">
 
 					<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{agendaFaces.addMedicao}" update="gridMedicao" />
 
-					<p:dataTable id="gridMedicao" value="#{agendaFaces.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="20" paginatorAlwaysVisible="false" rowIndexVar="i">
+					<p:dataTable id="gridMedicao" value="#{agendaFaces.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="3" paginatorAlwaysVisible="false" rowIndexVar="i">
 
 						<p:column headerText="#">
         					#{i+1}
@@ -142,12 +142,13 @@
 
 			</p:fieldset>
 
-			<p:commandButton id="btnInserir" value="Cadastrar" icon="salvar" action="#{agendaFaces.insertEvent}" style="height:28px; width: 110px;margin-left: 2px;" global="false" oncomplete="handleRequest(eventDialog, args);" rendered="#{!agendaFaces.flagAlterar and autenticacaoFaces.permissaoSelecionada.flagInserir}" />
+			<p:commandButton id="btnInserir" value="Cadastrar" icon="salvar" action="#{agendaFaces.insertEvent}" style="height:28px; width: 110px;margin-left: 2px;" global="false" oncomplete="handleRequest(eventDialog, args);" rendered="#{!agendaFaces.flagAlterar and autenticacaoFaces.permissaoSelecionada.flagInserir and autenticacaoFaces.telaAgendamento}" />
 
-			<p:commandButton id="btnAlterar" value="Alterar" icon="salvar" action="#{agendaFaces.updateEvent}" style="height:28px; width: 110px;margin-left: 2px;" global="false" oncomplete="handleRequest(eventDialog, args);" rendered="#{agendaFaces.flagAlterar and autenticacaoFaces.permissaoSelecionada.flagAlterar}" />
-
+			<p:commandButton id="btnAlterar" value="Alterar" icon="salvar" action="#{agendaFaces.updateEvent}" style="height:28px; width: 110px;margin-left: 2px;" global="false" oncomplete="handleRequest(eventDialog, args);" rendered="#{agendaFaces.flagAlterar and autenticacaoFaces.permissaoSelecionada.flagAlterar and autenticacaoFaces.telaAgendamento}" />
 
 		</h:panelGrid>
+		
+		<p:blockUI block="pnlProgramacao" widgetVar="pnl"/>
 
 	</p:dialog>
 
