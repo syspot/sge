@@ -1,5 +1,6 @@
 package br.com.sge.model;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import br.com.topsys.database.hibernate.TSActiveRecordAb;
+import br.com.topsys.exception.TSApplicationException;
 import br.com.topsys.util.TSUtil;
 
 @Entity
@@ -145,6 +147,10 @@ public class Financeiro extends TSActiveRecordAb<Financeiro> {
 			query.append("and f.tipoTransacao.id = ? ");
 		}
 
+		if (!TSUtil.isEmpty(fonte) && !TSUtil.isEmpty(fonte.getId())) {
+			query.append("and f.fonte.id = ? ");
+		}
+
 		if (!TSUtil.isEmpty(descricao)) {
 			query.append("and lower(f.descricao) like ? ");
 		}
@@ -191,6 +197,10 @@ public class Financeiro extends TSActiveRecordAb<Financeiro> {
 			params.add(tipoTransacao.getId());
 		}
 
+		if (!TSUtil.isEmpty(fonte) && !TSUtil.isEmpty(fonte.getId())) {
+			params.add(fonte.getId());
+		}
+
 		if (!TSUtil.isEmpty(descricao)) {
 			params.add("%" + descricao.toLowerCase() + "%");
 		}
@@ -214,12 +224,12 @@ public class Financeiro extends TSActiveRecordAb<Financeiro> {
 		return super.find(query.toString(), "dataLancamento", params.toArray());
 	}
 
-	public Date getDataLancamento() {
-		return dataLancamento;
-	}
+	/* TODO importar medicoes para financeiro */
 
-	public void setDataLancamento(Date dataLancamento) {
-		this.dataLancamento = dataLancamento;
+	public int importarMedicoes() throws TSApplicationException {
+
+		return super.update("INSERT INTO FINANCEIRO (TIPO_TRANSACAO_ID, FONTE_ID, AGENDA_ID, VALOR) SELECT 2, 1, A.ID, SUM(M.VALOR) FROM AGENDA A, AGENDA_MEDICAO M WHERE A.ID = M.AGENDA_ID AND A.FLAG_CONCLUIDO AND NOT EXISTS (SELECT 1 FROM FINANCEIRO F WHERE F.AGENDA_ID = A.ID) GROUP BY A.ID", null);
+			
 	}
 
 	public Date getDataPagamento() {
@@ -359,6 +369,14 @@ public class Financeiro extends TSActiveRecordAb<Financeiro> {
 
 	public void setFlagPago(Boolean flagPago) {
 		this.flagPago = flagPago;
+	}
+
+	public Date getDataLancamento() {
+		return dataLancamento;
+	}
+
+	public void setDataLancamento(Date dataLancamento) {
+		this.dataLancamento = dataLancamento;
 	}
 
 }

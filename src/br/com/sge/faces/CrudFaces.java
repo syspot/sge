@@ -81,6 +81,9 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 	protected void posDetail(){
 	}
 	
+	protected void posDelete(){
+	}
+	
 	@Override
 	protected String insert() throws TSApplicationException {
 		
@@ -140,8 +143,10 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 		this.limpar();
 		
 		this.grid = this.crudPesquisaModel.findByModel(map, getFieldOrdem());
-		
+				
 		this.tabIndex = 1;
+		
+		posDelete();
 		
 		return null;
 		

@@ -14,6 +14,8 @@ import br.com.sge.model.Contrato;
 import br.com.sge.model.Financeiro;
 import br.com.sge.model.Fonte;
 import br.com.sge.model.TipoTransacao;
+import br.com.topsys.exception.TSApplicationException;
+import br.com.topsys.util.TSUtil;
 
 @ViewScoped
 @ManagedBean(name = "financeiroFaces")
@@ -23,27 +25,28 @@ public class FinanceiroFaces extends CrudFaces<Financeiro> {
 	private List<SelectItem> comboFontes;
 	private List<SelectItem> comboClientes;
 	private List<SelectItem> comboContratos;
-	
-	
-	private Financeiro financeiroSelecionado;	
+
+	private Financeiro financeiroSelecionado;
 
 	@PostConstruct
 	protected void init() {
 		this.clearFields();
-		this.comboTiposTransacoes = super.initCombo(new TipoTransacao().findByModel("descricao"), "id", "descricao");		
-		this.comboFontes= super.initCombo(new Fonte(Boolean.TRUE).findByModel("descricao"), "id", "descricao");
+		this.comboTiposTransacoes = super.initCombo(new TipoTransacao().findByModel("descricao"), "id", "descricao");
+		this.comboFontes = super.initCombo(new Fonte(Boolean.TRUE).findByModel("descricao"), "id", "descricao");
 		this.comboClientes = super.initCombo(new Cliente(Boolean.TRUE).findByModel("nome"), "id", "nome");
 		setFieldOrdem("dataLancamento");
+
 	}
 
 	@Override
 	public String limpar() {
+		setTabIndex(1);
 		super.limpar();
 		getCrudModel().setTipoTransacao(new TipoTransacao());
 		getCrudModel().setAgenda(new Agenda());
 		getCrudModel().getAgenda().setContrato(new Contrato());
 		getCrudModel().getAgenda().getContrato().setCliente(new Cliente());
-		getCrudModel().setFonte(new Fonte());		
+		getCrudModel().setFonte(new Fonte());
 		getCrudModel().setDataLancamento(new Date());
 		return null;
 
@@ -56,11 +59,51 @@ public class FinanceiroFaces extends CrudFaces<Financeiro> {
 		getCrudPesquisaModel().setAgenda(new Agenda());
 		getCrudPesquisaModel().getAgenda().setContrato(new Contrato());
 		getCrudPesquisaModel().getAgenda().getContrato().setCliente(new Cliente());
-		getCrudPesquisaModel().setFonte(new Fonte());			
+		getCrudPesquisaModel().setFonte(new Fonte());
 		return null;
 
 	}
+
+	@Override
+	protected void prePersist() {
+
+		if (!TSUtil.isEmpty(getCrudModel().getAgenda()) && TSUtil.isEmpty(getCrudModel().getAgenda().getId())) {
+			getCrudModel().setAgenda(null);
+		}
+				
+	}
+
+	protected void posDetail() {
+
+		if (TSUtil.isEmpty(getCrudModel().getAgenda())) {
+			getCrudModel().setAgenda(new Agenda());
+		}
+
+		setTabIndex(1);
+
+	}
+
+	protected void posDelete() {
+
+		setTabIndex(0);
+
+	}
+
+	public void atualizarSituação() {
+		if (TSUtil.isEmpty(getCrudModel().getDataPagamento())) {
+			getCrudModel().setDataPagamento(new Date());
+		} else {
+			getCrudModel().setDataPagamento(null);
+		}
+		
+		super.updateEvent();
+	}
 	
+	public void importarMedicoes() throws TSApplicationException {
+		getCrudModel().importarMedicoes();
+		super.findEvent();
+	}
+
 	public void atualizarContratosPesquisa() {
 		getCrudPesquisaModel().getAgenda().getContrato().getCliente().setContratos(new Contrato(getCrudPesquisaModel().getAgenda().getContrato().getCliente()).findByModel("descricao"));
 	}

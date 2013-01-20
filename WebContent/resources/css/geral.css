@@ -458,6 +458,18 @@ img.right {
     top:20% !important;
 }
 
+.ok1 {
+    height:16px !important;
+    width:16px !important;
+    background-image: url(../images/ok1.jpg) !important;    
+}
+
+.ok2 {
+    height:16px !important;
+    width:16px !important;
+    background-image: url(../images/ok2.jpg) !important;    
+}
+
 .salvar {
     height:16px !important;
     width:16px !important;

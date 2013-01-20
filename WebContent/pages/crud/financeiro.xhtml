@@ -96,14 +96,14 @@
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 					<f:selectItems value="#{mbean.comboFontes}" />
 				</p:selectOneMenu>
-				
+
 				<p:calendar id="dataInicialLancamentoPesquisa" value="#{mbeanPesquisaModel.dataInicialLancamento}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
 
 				<p:calendar id="dataFinalLancamentoPesquisa" value="#{mbeanPesquisaModel.dataFinalLancamento}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
 
 				<p:calendar id="dataInicialPagamentoPesquisa" value="#{mbeanPesquisaModel.dataInicialPagamento}" navigator="true" pattern="dd/MM/yyyy" size="15" />
 
-				<p:calendar id="dataFinalPagamentoPesquisa" value="#{mbeanPesquisaModel.dataFinalPagamento}" navigator="true" pattern="dd/MM/yyyy" size="15" />				
+				<p:calendar id="dataFinalPagamentoPesquisa" value="#{mbeanPesquisaModel.dataFinalPagamento}" navigator="true" pattern="dd/MM/yyyy" size="15" />
 
 				<p:selectOneMenu id="situacaoPesquisa" value="#{mbeanPesquisaModel.flagPago}" style="width:150px">
 					<f:selectItem itemLabel="Todas" itemValue="#{null}" />
@@ -119,8 +119,58 @@
 
 	<ui:define name="colunasTabela">
 
-		<p:column headerText="Situação" styleClass="coluna10">
+		<p:column headerText="Código" styleClass="coluna5">
+			<h:outputText value="#{linha.id}" />
+		</p:column>
+		
+		<p:column headerText="Lançamento" styleClass="coluna10" sortBy="#{linha.dataLancamento}">
+			<h:outputText value="#{linha.dataLancamento}">
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Recife"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Transação" styleClass="coluna5" sortBy="#{linha.tipoTransacao.descricao}">
+			<h:outputText value="#{linha.tipoTransacao.descricao}" />
+		</p:column>
+
+		<p:column headerText="Fonte" styleClass="coluna20" sortBy="#{linha.fonte.descricao}">
+			<h:outputText value="#{linha.fonte.descricao}" />
+		</p:column>
+		
+		<p:column headerText="Descrição" styleClass="coluna20" sortBy="#{linha.descricao}">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+		<p:column headerText="Valor" styleClass="coluna10" style="text-align: right" sortBy="#{linha.valor}">
+			<h:outputText value="#{linha.valor}">
+				<f:convertNumber pattern="#,###,##0.00" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Situação" styleClass="coluna10" sortBy="#{linha.fonte.descricao}">
 			<h:outputText value="#{linha.situacao}" />
+		</p:column>
+		
+		<p:column headerText="Pagamento" styleClass="coluna5" sortBy="#{linha.dataPagamento}">
+			<h:outputText value="#{linha.dataPagamento}" >
+				<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Recife" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Pagar" styleClass="coluna5">
+		
+			<div align="center">
+
+				<p:commandLink action="#{mbean.atualizarSituação}" id="clConcluir" update="@form">
+
+					<h:graphicImage value="../resources/images/ok1.jpg" style="border: 0px" rendered="#{empty linha.dataPagamento}" />
+					<h:graphicImage value="../resources/images/ok2.jpg" style="border: 0px" rendered="#{!empty linha.dataPagamento}" />
+					<f:setPropertyActionListener target="#{mbeanModel}" value="#{linha}" />
+
+				</p:commandLink>
+
+			</div>
+			
 		</p:column>
 
 	</ui:define>
