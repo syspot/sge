@@ -125,7 +125,7 @@
 
 							<div align="center">
 
-								<p:commandLink action="#{agendaFaces.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update="@form gridMedicao">
+								<p:commandLink action="#{agendaFaces.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update=":formDialog:fsMedicao gridMedicao" global="false">
 
 									<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
 									<f:setPropertyActionListener target="#{agendaFaces.medicaoSelecionada}" value="#{linha}" />
@@ -147,8 +147,51 @@
 			<p:commandButton id="btnAlterar" value="Alterar" icon="salvar" action="#{agendaFaces.updateEvent}" style="height:28px; width: 110px;margin-left: 2px;" global="false" oncomplete="handleRequest(eventDialog, args);" rendered="#{agendaFaces.flagAlterar and autenticacaoFaces.permissaoSelecionada.flagAlterar and autenticacaoFaces.telaAgendamento}" />
 
 		</h:panelGrid>
-		
-		<p:blockUI block="pnlProgramacao" widgetVar="pnl"/>
+
+		<p:blockUI block="pnlProgramacao" widgetVar="pnl" />
+
+	</p:dialog>
+
+	<p:dialog modal="true" id="painelParcial" header="Pagamento Parcial" position="center" widgetVar="parcialDialog" styleClass="dialog50" rendered="#{autenticacaoFaces.telaFinanceiro}">
+
+		<h:panelGrid columns="1" style="width: 100%">
+
+			<p:commandButton value="Adicionar Pagamento" icon="ui-icon-plus" action="#{financeiroFaces.addParcial}" style="width: 180px;" global="false" update="dtParcial" process="@this" />
+
+			<p:outputPanel autoUpdate="true">
+
+				<p:dataTable id="dtParcial" value="#{financeiroFaces.crudModel.parciais}" var="linha" style="width: 100%" emptyMessage="Nenhuma Parcial" paginator="true" rows="5" paginatorAlwaysVisible="false">
+
+					<p:column headerText="Valor" styleClass="coluna15">
+						<p:inputText style="width: 90%; text-align: right" value="#{linha.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor Parcial: Campo obrigatório">
+							<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+						</p:inputText>
+					</p:column>
+
+					<p:column headerText="Data" styleClass="coluna15">
+						<p:calendar id="dataInicial" required="true" requiredMessage="Data Pagamento Parcial: Valor obrigatório" value="#{linha.dataPagamento}" navigator="true" pattern="dd/MM/yyyy" size="11" />
+					</p:column>
+
+					<p:column headerText="Observação" styleClass="coluna70">
+						<p:inputTextarea rows="1" value="#{linha.observacao}" style="width: 95%" />
+					</p:column>
+
+					<p:column styleClass="coluna5">
+						<p:commandLink icon="delete16" global="false" action="#{financeiroFaces.delParcial}" process="@this" update=":formDialog:dtParcial">
+
+							<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+							<f:setPropertyActionListener target="#{financeiroFaces.parcialSelecionado}" value="#{linha}" />
+
+						</p:commandLink>
+					</p:column>
+						
+				</p:dataTable>
+
+			</p:outputPanel>
+
+			<p:commandButton value="Salvar" icon="salvar" action="#{financeiroFaces.atualizarSituacao}" style="width: 110px;" global="false" oncomplete="handleRequest2(parcialDialog, args);" process="painelParcial" update=":tabview:formPesquisa"/>
+
+		</h:panelGrid>
 
 	</p:dialog>
 

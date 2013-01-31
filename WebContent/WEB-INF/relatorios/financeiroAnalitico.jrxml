@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="financeiroAnalitico" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dropbox\\Desenvolvimento\\Projetos Java\\sge\\WebContent\\WEB-INF\\relatorios\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLIENTE_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTRATO_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select f.data_lancamento,
+       tt.descricao tipo_transacao,
+       ft.descricao fonte,
+       a.id agenda_id,
+       c.nome cliente,
+       c.id,
+       ct.descricao contrato,
+       f.descricao,
+       coalesce(case when tt.id = 1 then f.valor end,0) receita,
+       coalesce(case when tt.id = 2 then f.valor * -1 end,0) despesa,
+       coalesce(case when tt.id = 1 then (select sum(fp.valor) from financeiro_parcial fp where fp.financeiro_id = f.id)
+                when tt.id = 2 then (select sum(fp.valor) from financeiro_parcial fp where fp.financeiro_id = f.id) * -1
+                end,0) valor_pago
+  from financeiro f inner join tipo_transacao tt on f.tipo_transacao_id = tt.id
+		    inner join fonte ft on f.fonte_id = ft.id
+		    left outer join agenda a on f.agenda_id = a.id
+		    left outer join contrato ct on a.contrato_id = ct.id
+		    left outer join cliente c on ct.cliente_id = c.id
+ where coalesce(c.id, 0) = coalesce($P{CLIENTE_ID}, coalesce(c.id, 0))
+   and coalesce(ct.id, 0) = coalesce($P{CONTRATO_ID}, coalesce(ct.id, 0))
+   and data_lancamento between $P{DATA_INICIAL} and $P{DATA_FINAL}
+ order by data_lancamento]]>
+	</queryString>
+	<field name="data_lancamento" class="java.sql.Timestamp"/>
+	<field name="tipo_transacao" class="java.lang.String"/>
+	<field name="fonte" class="java.lang.String"/>
+	<field name="agenda_id" class="java.lang.Long"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="contrato" class="java.lang.String"/>
+	<field name="descricao" class="java.lang.String"/>
+	<field name="receita" class="java.lang.Double"/>
+	<field name="despesa" class="java.lang.Double"/>
+	<field name="valor_pago" class="java.lang.Double"/>
+	<variable name="receita_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{receita}]]></variableExpression>
+	</variable>
+	<variable name="despesa_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{despesa}]]></variableExpression>
+	</variable>
+	<variable name="valor_pago_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_pago}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="79"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FILTRO">
+					<subreportParameterExpression><![CDATA[( $P{CLIENTE_ID}.intValue() > 0 ? $F{cliente}.toUpperCase() : "" )]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="TITULO">
+					<subreportParameterExpression><![CDATA["Financeiro Analítico"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "cabecalhoLandscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="15" width="87" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Lançamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="87" y="15" width="68" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Transação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="155" y="15" width="177" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Fonte]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="332" y="15" width="38" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Agenda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="15" width="213" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Contrato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="583" y="15" width="73" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Receita]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="656" y="15" width="73" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Despesa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="729" y="15" width="73" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Liquidação]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="87" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{data_lancamento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="0" width="68" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{tipo_transacao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="155" y="0" width="177" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{fonte}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="332" y="0" width="38" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{agenda_id}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="213" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{contrato}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="583" y="0" width="73" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{receita}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="656" y="0" width="73" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{despesa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="729" y="0" width="73" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{valor_pago}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="42">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="42"/>
+				<subreportParameter name="PAGINA">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "rodapeLandscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="583" y="0" width="73" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{receita_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="656" y="0" width="73" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{despesa_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="729" y="0" width="73" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{valor_pago_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

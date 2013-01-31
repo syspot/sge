@@ -16,6 +16,7 @@
 
 				<p:selectOneMenu id="tipoTransacao" value="#{mbeanModel.tipoTransacao.id}" required="true" requiredMessage="Tipo de Transacao: Campo obrigatório" style="width:95%">
 					<f:selectItems value="#{mbean.comboTiposTransacoes}" />
+					<p:ajax event="change" listener="#{mbean.atualizarComboFontes}" update="fonte" global="false" />
 				</p:selectOneMenu>
 
 				<p:selectOneMenu id="fonte" value="#{mbeanModel.fonte.id}" required="true" requiredMessage="Fonte: Campo obrigatório" style="width:98%">
@@ -57,9 +58,9 @@
 
 	<ui:define name="pesquisaCampos">
 
-		<h:panelGrid columns="1" style="width:90%">
+		<h:panelGrid columns="1" style="width:95%">
 
-			<h:panelGrid columns="3" columnClasses="coluna15, coluna40, coluna45" style="width: 95%">
+			<h:panelGrid columns="3" columnClasses="coluna15, coluna40, coluna45" style="width: 99%">
 
 				<p:outputLabel for="transacaoPesquisa" value="Transação" />
 				<p:outputLabel for="clientePesquisa" value="Cliente" />
@@ -68,6 +69,7 @@
 				<p:selectOneMenu id="transacaoPesquisa" value="#{mbeanPesquisaModel.tipoTransacao.id}" style="width:95%">
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 					<f:selectItems value="#{mbean.comboTiposTransacoes}" />
+					<p:ajax event="change" listener="#{mbean.atualizarComboFontesPesquisa}" update="fontePesquisa" global="false" />
 				</p:selectOneMenu>
 
 				<p:selectOneMenu id="clientePesquisa" value="#{mbeanPesquisaModel.agenda.contrato.cliente.id}" style="width:99%">
@@ -83,7 +85,7 @@
 
 			</h:panelGrid>
 
-			<h:panelGrid columns="6" columnClasses="coluna30, coluna5, coluna5, coluna5, coluna5, coluna10" style="width: 95%">
+			<h:panelGrid columns="6" columnClasses="coluna30, coluna5, coluna5, coluna5, coluna5, coluna10" style="width: 100%">
 
 				<p:outputLabel for="fontePesquisa" value="Fonte" />
 				<p:outputLabel for="dataInicialLancamentoPesquisa" value="Data Inicial Lançamento" />
@@ -94,7 +96,7 @@
 
 				<p:selectOneMenu id="fontePesquisa" value="#{mbeanPesquisaModel.fonte.id}" style="width:95%">
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-					<f:selectItems value="#{mbean.comboFontes}" />
+					<f:selectItems value="#{mbean.comboFontesPesquisa}" />
 				</p:selectOneMenu>
 
 				<p:calendar id="dataInicialLancamentoPesquisa" value="#{mbeanPesquisaModel.dataInicialLancamento}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
@@ -119,13 +121,48 @@
 
 	<ui:define name="colunasTabela">
 
-		<p:column headerText="Código" styleClass="coluna5">
-			<h:outputText value="#{linha.id}" />
-		</p:column>
-		
-		<p:column headerText="Lançamento" styleClass="coluna10" sortBy="#{linha.dataLancamento}">
+		<f:facet name="header">
+			<h:panelGrid columns="10" columnClasses="coluna10, coluna10, coluna10, coluna10, coluna10, coluna10, coluna10, coluna10, coluna10, coluna10">
+
+				<h:outputText value="Total Receitas:" style="width: 100px" />
+
+				<h:outputText value="#{mbean.totalReceitas}" style="width: 100px; color: green">
+					<f:convertNumber pattern="#,###,##0.00" />
+				</h:outputText>
+
+				<h:outputText value="Total Despesas:" style="width: 100px" />
+
+				<h:outputText value="#{mbean.totalDespesas}" style="width: 100px; color: red">
+					<f:convertNumber pattern="#,###,##0.00" />
+				</h:outputText>
+
+				<h:outputText value="Saldo:" style="width: 100px" />
+
+				<h:outputText value="#{mbean.totalReceitas - mbean.totalDespesas}" style="width: 100px; color: blue">
+					<f:convertNumber pattern="#,###,##0.00" />
+				</h:outputText>
+
+				<h:outputText value="Recebidos:" style="width: 100px" />
+
+				<h:outputText value="#{mbean.totalReceitasPagas}" style="width: 100px; color: green">
+					<f:convertNumber pattern="#,###,##0.00" />
+				</h:outputText>
+
+				<h:outputText value="Efetuadas:" style="width: 100px" />
+
+				<h:outputText value="#{mbean.totalDespesasPagas}" style="width: 100px; color: red">
+					<f:convertNumber pattern="#,###,##0.00" />
+				</h:outputText>
+
+				<h:outputText value=" " />
+
+			</h:panelGrid>
+
+		</f:facet>
+
+		<p:column headerText="Lançamento" styleClass="coluna12" sortBy="#{linha.dataLancamento}">
 			<h:outputText value="#{linha.dataLancamento}">
-				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Recife"/>
+				<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Recife" />
 			</h:outputText>
 		</p:column>
 
@@ -136,41 +173,62 @@
 		<p:column headerText="Fonte" styleClass="coluna20" sortBy="#{linha.fonte.descricao}">
 			<h:outputText value="#{linha.fonte.descricao}" />
 		</p:column>
-		
+
+		<p:column headerText="Agenda" styleClass="coluna5" sortBy="#{linha.agenda.id}">
+			<p:commandLink value="#{linha.agenda.id}" action="#{agendaFaces.detailEvent}" oncomplete="eventDialog.show();pnl.show()" update=":formDialog:painel" style="font-weight: bold;">
+				<f:setPropertyActionListener target="#{agendaFaces.crudModel}" value="#{linha.agenda}" />
+			</p:commandLink>
+		</p:column>
+
 		<p:column headerText="Descrição" styleClass="coluna20" sortBy="#{linha.descricao}">
 			<h:outputText value="#{linha.descricao}" />
 		</p:column>
 
-		<p:column headerText="Valor" styleClass="coluna10" style="text-align: right" sortBy="#{linha.valor}">
-			<h:outputText value="#{linha.valor}">
+		<p:column headerText="Receitas" styleClass="coluna10" style="text-align: right;font-weight: bold; color: green" sortBy="#{linha.valor}">
+
+			<h:outputText value="#{linha.valor}" rendered="#{linha.tipoTransacao.id == 1}">
+				<f:convertNumber pattern="#,###,##0.00" />
+			</h:outputText>
+
+		</p:column>
+
+		<p:column headerText="Despesas" styleClass="coluna10" style="text-align: right;font-weight: bold; color: red" sortBy="#{linha.valor}">
+			<h:outputText value="#{linha.valor}" rendered="#{linha.tipoTransacao.id == 2}">
 				<f:convertNumber pattern="#,###,##0.00" />
 			</h:outputText>
 		</p:column>
 
-		<p:column headerText="Situação" styleClass="coluna10" sortBy="#{linha.fonte.descricao}">
-			<h:outputText value="#{linha.situacao}" />
-		</p:column>
-		
-		<p:column headerText="Pagamento" styleClass="coluna5" sortBy="#{linha.dataPagamento}">
-			<h:outputText value="#{linha.dataPagamento}" >
-				<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Recife" />
-			</h:outputText>
+		<p:column headerText="Liquidação" styleClass="coluna10" sortBy="#{linha.valorParcial}" style="text-align:right">
+			<p:commandLink rendered="#{linha.tipoTransacao.id == 1}" onclick="parcialDialog.show()" global="false" update=":formDialog:dtParcial" style="text-align: right;font-weight: bold; color: green">
+				<h:outputText value="#{linha.valorParcial}" rendered="#{linha.tipoTransacao.id == 1}">
+					<f:convertNumber pattern="#,###,##0.00" />
+				</h:outputText>
+				<f:setPropertyActionListener target="#{mbean.crudModel}" value="#{linha}" />
+			</p:commandLink>
+			<p:commandLink rendered="#{linha.tipoTransacao.id == 2}" onclick="parcialDialog.show()" global="false" update=":formDialog:dtParcial" style="text-align: right;font-weight: bold; color: red">
+				<h:outputText value="#{linha.valorParcial}" rendered="#{linha.tipoTransacao.id == 2}">
+					<f:convertNumber pattern="#,###,##0.00" />
+				</h:outputText>
+				<f:setPropertyActionListener target="#{mbean.crudModel}" value="#{linha}" />
+			</p:commandLink>
 		</p:column>
 
-		<p:column headerText="Pagar" styleClass="coluna5">
-		
+		<p:column headerText="Pag/Rec" styleClass="coluna5">
+
 			<div align="center">
 
-				<p:commandLink action="#{mbean.atualizarSituação}" id="clConcluir" update="@form">
+				<p:commandLink action="#{mbean.pagarIntegralmente}" id="clConcluir" update="@form">
 
-					<h:graphicImage value="../resources/images/ok1.jpg" style="border: 0px" rendered="#{empty linha.dataPagamento}" />
-					<h:graphicImage value="../resources/images/ok2.jpg" style="border: 0px" rendered="#{!empty linha.dataPagamento}" />
+					<h:graphicImage value="../resources/images/ok2.jpg" style="border: 0px" rendered="#{linha.valor != linha.valorParcial and linha.valorParcial == 0}" />					
+					<h:graphicImage value="../resources/images/ok3.jpg" style="border: 0px" rendered="#{linha.valor != linha.valorParcial and linha.valorParcial > 0}" />
 					<f:setPropertyActionListener target="#{mbeanModel}" value="#{linha}" />
 
 				</p:commandLink>
+				
+				<h:graphicImage value="../resources/images/ok1.jpg" style="border: 0px" rendered="#{linha.valor == linha.valorParcial}" />
 
 			</div>
-			
+
 		</p:column>
 
 	</ui:define>

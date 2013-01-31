@@ -10,9 +10,14 @@
 
 			<p:outputLabel for="descricao" value="Descrição" />
 			<p:inputText id="descricao" required="true" requiredMessage="Descrição: Campo obrigatorio" maxlength="50" value="#{mbeanModel.descricao}" styleClass="coluna90" />
-						
+
+			<p:outputLabel for="tipoTransacao" value="Tipo de Transação" />
+			<p:selectOneMenu id="tipoTransacao" value="#{mbeanModel.tipoTransacao.id}" required="true" requiredMessage="Tipo de Transacao: Campo obrigatório" style="width:50%">
+				<f:selectItems value="#{mbean.comboTiposTransacoes}" />
+			</p:selectOneMenu>				
+
 			<p:selectBooleanCheckbox id="ativo" value="#{mbeanModel.flagAtivo}" itemLabel="Ativo?" />
-			
+
 		</h:panelGrid>
 
 	</ui:define>
@@ -23,7 +28,13 @@
 
 			<p:outputLabel for="descricaoPesquisa" value="Descrição" />
 			<p:inputText id="descricaoPesquisa" value="#{mbeanPesquisaModel.descricao}" styleClass="coluna90" />
-						
+			
+			<p:outputLabel for="tipoTransacaoPesquisa" value="Tipo de Transação" />
+			<p:selectOneMenu id="tipoTransacaoPesquisa" value="#{mbeanPesquisaModel.tipoTransacao.id}" style="width:50%">
+				<f:selectItem itemLabel="Não Selecionado" itemValue=""/>
+				<f:selectItems value="#{mbean.comboTiposTransacoes}" />
+			</p:selectOneMenu>					
+
 			<p:selectBooleanCheckbox id="ativoPesquisa" value="#{mbeanPesquisaModel.flagAtivo}" itemLabel="Ativo?" />
 
 		</h:panelGrid>
@@ -32,10 +43,14 @@
 
 	<ui:define name="colunasTabela">
 
-		<p:column headerText="Descrição" styleClass="coluna80">
+		<p:column headerText="Descrição" styleClass="coluna70">
 			<h:outputText value="#{linha.descricao}" />
 		</p:column>
 		
+		<p:column headerText="Tipo de Transação" styleClass="coluna10">
+			<h:outputText value="#{linha.tipoTransacao.descricao}" />
+		</p:column>				
+
 		<p:column headerText="Situação" styleClass="coluna10">
 			<h:outputText value="#{linha.situacao}" />
 		</p:column>

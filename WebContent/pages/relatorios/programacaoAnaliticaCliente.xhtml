@@ -1,0 +1,46 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="${relatorioFaces}" />
+	<ui:param name="mbeanModel" value="${relatorioFaces.agendaSelecionada}" />
+
+	<h:form id="formImpressao">
+
+		<p:fieldset style="width: 95%">
+
+			<h:panelGrid columns="1" style="width:97%">
+
+				<h:panelGrid columns="2" columnClasses="coluna10, coluna90">
+
+					<p:outputLabel for="dataInicial" value="Data Inicial" />
+					<p:outputLabel for="dataFinal" value="Data Final" />
+
+					<p:calendar id="dataInicial" required="true" requiredMessage="Data Inicial: Valor obrigatório" value="#{mbeanModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+
+					<p:calendar id="dataFinal" required="true" requiredMessage="Data Final: Valor obrigatório" value="#{mbeanModel.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" />
+
+				</h:panelGrid>
+
+				<p:outputLabel for="cliente" value="Cliente" />
+
+				<p:selectOneMenu id="cliente" value="#{mbeanModel.contrato.cliente.id}" required="true" requiredMessage="Cliente: Campo obrigatório" style="width:50%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboClientes}" />
+					<p:ajax event="change" listener="#{mbean.atualizarContratos}" update="contrato" global="false" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="contrato" value="Contrato" />
+
+				<p:selectOneMenu id="contrato" value="#{mbeanModel.contrato.id}" style="width:50%">
+					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+					<f:selectItems value="#{mbeanModel.contrato.cliente.contratos}" var="i" itemLabel="#{i.descricao}" itemValue="#{i.id}" />
+				</p:selectOneMenu>
+
+				<p:commandButton ajax="false" id="btnImprimir" value="Imprimir" icon="ui-icon-print" onclick="this.form.target='_blank';" onmouseout="this.form.target='';" action="#{mbean.imprimirProgramacaoAnaliticaCliente}" />
+
+			</h:panelGrid>
+
+		</p:fieldset>
+
+	</h:form>
+
+</ui:composition>

@@ -1,12 +1,20 @@
 <ui:component xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
 
-	<h:panelGrid columns="3" columnClasses="coluna10, coluna10, coluna80" style="width:100%">
+	<h:panelGrid columns="2" columnClasses="coluna10, coluna90" style="width:100%" rendered="#{!autenticacaoFaces.telaFinanceiro}">
 
-		<p:commandButton value="Pesquisar" icon="pesquisar" action="#{mbean.findEvent}" onclick="dtPesquisa.getPaginator().setPage(0);" update="opPesquisa" style="height:28px; width: 140px;" />
+		<p:commandButton value="Pesquisar" icon="pesquisar" action="#{mbean.findEvent}" onclick="dtPesquisa.getPaginator().setPage(0);" update="opPesquisa" style="height:28px; width: 140px;" />				
+
+		<p:commandButton value="Nova Pesquisa" icon="novo" action="#{mbean.limparPesquisa}" update="opPesquisa" style="height:28px; width: 140px;" />				
+
+	</h:panelGrid>
+	
+	<h:panelGrid columns="3" columnClasses="coluna10, coluna10, coluna80" style="width:100%" rendered="#{autenticacaoFaces.telaFinanceiro}">
+
+		<p:commandButton value="Pesquisar" icon="pesquisar" action="#{mbean.findEvent}" onclick="dtPesquisa.getPaginator().setPage(0);" update="opPesquisa" style="height:28px; width: 140px;" />				
+
+		<p:commandButton value="Importar Medições" icon="add16" action="#{mbean.importarMedicoes}" onclick="dtPesquisa.getPaginator().setPage(0);" update="opPesquisa" style="height:28px; width: 160px;" />
 		
-		<p:commandButton value="Importar Medições" icon="add16" action="#{mbean.importarMedicoes}" onclick="dtPesquisa.getPaginator().setPage(0);" update="opPesquisa" style="height:28px; width: 160px;" rendered="#{autenticacaoFaces.telaFinanceiro}"/>
-
-		<p:commandButton value="Nova Pesquisa" icon="novo" action="#{mbean.limparPesquisa}" update="opPesquisa" style="height:28px; width: 140px;" />
+		<p:commandButton value="Nova Pesquisa" icon="novo" action="#{mbean.limparPesquisa}" update="opPesquisa" style="height:28px; width: 140px;" />				
 
 	</h:panelGrid>
 

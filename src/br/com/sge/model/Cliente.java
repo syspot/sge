@@ -44,7 +44,7 @@ public class Cliente extends TSActiveRecordAb<Cliente> {
 	@Column(name = "flag_ativo")
 	private Boolean flagAtivo;
 	
-	@OneToMany(mappedBy = "cliente", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)	
+	@OneToMany(mappedBy = "cliente", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)	
 	private List<Contrato> contratos;
 
 	public Cliente() {
@@ -169,7 +169,7 @@ public class Cliente extends TSActiveRecordAb<Cliente> {
 			params.add(flagAtivo);
 		}
 
-		return super.find(query.toString(), "nome", params.toArray());
+		return super.find(query.toString(), "c.nome", params.toArray());
 	}
 
 	@Override

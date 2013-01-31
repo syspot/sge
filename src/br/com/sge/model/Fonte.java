@@ -1,10 +1,16 @@
 package br.com.sge.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,6 +27,10 @@ public class Fonte extends TSActiveRecordAb<Fonte> {
 	private Long id;
 
 	private String descricao;
+	
+	@ManyToOne
+	@JoinColumn(name = "tipo_transacao_id")
+	private TipoTransacao tipoTransacao;
 
 	@Column(name = "flag_ativo")
 	private Boolean flagAtivo;
@@ -29,9 +39,11 @@ public class Fonte extends TSActiveRecordAb<Fonte> {
 
 	}
 
-	public Fonte(Boolean flagAtivo) {
+	public Fonte(Boolean flagAtivo, TipoTransacao tipoTransacao) {
 
 		this.flagAtivo = flagAtivo;
+		
+		this.tipoTransacao = tipoTransacao;
 
 	}
 
@@ -61,6 +73,48 @@ public class Fonte extends TSActiveRecordAb<Fonte> {
 
 	public String getSituacao() {
 		return (flagAtivo.equals(Boolean.TRUE) ? "ATIVO" : "INATIVO");
+	}
+	
+	@Override
+	public List<Fonte> findByModel(String... fieldsOrderBy) {
+		return findByModel(null, fieldsOrderBy);
+	}
+
+	@Override
+	public List<Fonte> findByModel(Map<String, Object> map, String... fieldsOrderBy) {
+
+		StringBuilder query = new StringBuilder();
+
+		query.append(" from Fonte f where 1=1 ");
+
+		if (!TSUtil.isEmpty(tipoTransacao) && !TSUtil.isEmpty(tipoTransacao.getId())) {
+			query.append("and f.tipoTransacao.id = ? ");
+		}
+
+		if (!TSUtil.isEmpty(descricao)) {
+			query.append("and lower(f.descricao) like ? ");
+		}
+		
+		if (!TSUtil.isEmpty(flagAtivo)) {
+			query.append("and f.flagAtivo = ?");			
+		}
+
+		List<Object> params = new ArrayList<Object>();
+
+		if (!TSUtil.isEmpty(tipoTransacao) && !TSUtil.isEmpty(tipoTransacao.getId())) {
+			params.add(tipoTransacao.getId());
+		}
+
+		if (!TSUtil.isEmpty(descricao)) {
+			params.add("%" + descricao.toLowerCase() + "%");
+		}
+		
+		if (!TSUtil.isEmpty(flagAtivo)) {
+			params.add(flagAtivo);
+		}
+
+		
+		return super.find(query.toString(), "descricao", params.toArray());
 	}
 
 	@Override
@@ -98,6 +152,14 @@ public class Fonte extends TSActiveRecordAb<Fonte> {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public TipoTransacao getTipoTransacao() {
+		return tipoTransacao;
+	}
+
+	public void setTipoTransacao(TipoTransacao tipoTransacao) {
+		this.tipoTransacao = tipoTransacao;
 	}
 
 }

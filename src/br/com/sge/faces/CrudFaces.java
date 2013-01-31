@@ -78,6 +78,9 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 	protected void prePersist(){
 	}
 	
+	protected void posPersist(){
+	}
+	
 	protected void posDetail(){
 	}
 	
@@ -100,6 +103,8 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 		this.prePersist();
 		
 		this.crudModel.save();
+		
+		this.posPersist();
 		
 		this.limpar();
 		
@@ -127,6 +132,8 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 		
 		this.crudModel.update();
 		
+		this.posPersist();
+		
 		this.limpar();
 		
 		this.setDefaultMessage(Boolean.TRUE);
@@ -140,15 +147,13 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 		
 		this.crudModel.delete();
 		
-		this.limpar();
-		
-		this.grid = this.crudPesquisaModel.findByModel(map, getFieldOrdem());
+		this.limpar();		
 				
 		this.tabIndex = 1;
 		
 		posDelete();
 		
-		return null;
+		return find();
 		
 	}
 	

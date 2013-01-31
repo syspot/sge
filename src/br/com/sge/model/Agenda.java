@@ -60,7 +60,7 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 	
 	private String observacao;
 	
-	@OneToMany(mappedBy = "agenda", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "agenda", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
 	@OrderBy("dataInicial")
 	private List<Medicao> medicoes;
 
@@ -242,7 +242,7 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 			params.add(dataFinal);
 		}
 
-		return super.find(query.toString(), "dataInicial", params.toArray());
+		return super.find(query.toString(), "a.dataInicial", params.toArray());
 	}
 
 	@Override

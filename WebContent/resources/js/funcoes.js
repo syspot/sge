@@ -272,6 +272,20 @@ function handleRequest(widgerVar, args) {
 
 }
 
+function handleRequest2(widgerVar, args) {
+	if (args.valido) {      			  
+		widgerVar.hide();		
+	}
+
+}
+
+function handleRequestPrint(formVar, args) {
+	if (args.valido) {      			  
+		formVar.target='_blank';		
+	}
+
+}
+
 
     
   

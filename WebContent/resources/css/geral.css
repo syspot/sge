@@ -942,6 +942,11 @@ img.right {
     height: 400px !important;
 }
 
+.dialog50 {
+    width: 50% !important;
+    height: 50% !important;    
+}
+
 .dialog80 {
     width: 80% !important;
     height: 80% !important;    

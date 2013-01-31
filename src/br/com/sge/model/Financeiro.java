@@ -1,18 +1,20 @@
 package br.com.sge.model;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -51,6 +53,9 @@ public class Financeiro extends TSActiveRecordAb<Financeiro> {
 
 	@Column(name = "data_pagamento")
 	private Date dataPagamento;
+	
+	@OneToMany(mappedBy = "financeiro", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)	
+	private List<FinanceiroParcial> parciais;
 
 	@Transient
 	private Date dataInicialLancamento;
@@ -221,14 +226,12 @@ public class Financeiro extends TSActiveRecordAb<Financeiro> {
 			params.add(dataFinalPagamento);
 		}
 
-		return super.find(query.toString(), "dataLancamento", params.toArray());
+		return super.find(query.toString(), "f.dataLancamento", params.toArray());
 	}
-
-	/* TODO importar medicoes para financeiro */
 
 	public int importarMedicoes() throws TSApplicationException {
 
-		return super.executeSQL("INSERT INTO FINANCEIRO (TIPO_TRANSACAO_ID, FONTE_ID, AGENDA_ID, VALOR) SELECT 2, 1, A.ID, SUM(M.VALOR) FROM AGENDA A, AGENDA_MEDICAO M WHERE A.ID = M.AGENDA_ID AND A.FLAG_CONCLUIDO AND NOT EXISTS (SELECT 1 FROM FINANCEIRO F WHERE F.AGENDA_ID = A.ID) GROUP BY A.ID", null);
+		return super.executeSQL("INSERT INTO FINANCEIRO (TIPO_TRANSACAO_ID, FONTE_ID, AGENDA_ID, VALOR) SELECT 1, 1, A.ID, SUM(M.VALOR) FROM AGENDA A, AGENDA_MEDICAO M WHERE A.ID = M.AGENDA_ID AND A.FLAG_CONCLUIDO AND NOT EXISTS (SELECT 1 FROM FINANCEIRO F WHERE F.AGENDA_ID = A.ID) GROUP BY A.ID", null);
 			
 	}
 
@@ -270,6 +273,20 @@ public class Financeiro extends TSActiveRecordAb<Financeiro> {
 
 	public void setDataFinalPagamento(Date dataFinalPagamento) {
 		this.dataFinalPagamento = dataFinalPagamento;
+	}
+	
+	public Double getValorParcial() {
+		
+		
+		if (!TSUtil.isEmpty(parciais)) {
+			Double valor = 0D;
+			for (FinanceiroParcial model: parciais) {
+				valor = valor + model.getValor();
+			}
+			return valor;
+		}
+		
+		return 0D;
 	}
 
 	@Override
@@ -377,6 +394,14 @@ public class Financeiro extends TSActiveRecordAb<Financeiro> {
 
 	public void setDataLancamento(Date dataLancamento) {
 		this.dataLancamento = dataLancamento;
+	}
+
+	public List<FinanceiroParcial> getParciais() {
+		return parciais;
+	}
+
+	public void setParciais(List<FinanceiroParcial> parciais) {
+		this.parciais = parciais;
 	}
 
 }

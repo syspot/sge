@@ -34,6 +34,7 @@
 		<mapping class="br.com.sge.model.Agenda" />
 		<mapping class="br.com.sge.model.Medicao" />
 		<mapping class="br.com.sge.model.Financeiro" />
+		<mapping class="br.com.sge.model.FinanceiroParcial" />
 		<mapping class="br.com.sge.model.TipoTransacao" />
 		
 

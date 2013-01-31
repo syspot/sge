@@ -1,9 +1,12 @@
 package br.com.sge.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -25,25 +28,25 @@ public final class Menu extends TSActiveRecordAb<Menu> {
 	private String descricao;
 
 	private String url;
-	
-	@Column(name="managed_bean_reset")
+
+	@Column(name = "managed_bean_reset")
 	private String managedBeanReset;
-	
-	@Column(name="flag_ativo")
+
+	@Column(name = "flag_ativo")
 	private Boolean flagAtivo;
 
 	private Integer ordem;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "menu_id")
 	private Menu menuPai;
 
-	@OneToMany(mappedBy= "menuPai")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy = "menuPai")
 	private List<Menu> menus;
 
 	public Menu() {
 	}
-	
+
 	public Menu(Boolean flagAtivo) {
 		this.flagAtivo = flagAtivo;
 	}
@@ -111,32 +114,31 @@ public final class Menu extends TSActiveRecordAb<Menu> {
 	public void setMenuPai(Menu menuPai) {
 		this.menuPai = menuPai;
 	}
-	
+
 	public List<Menu> pesquisarCabecalhos(Long grupoID) {
-		
+
 		return findBySQL("select * from menu m where menu_id is null and flag_ativo = true and exists (select 1 from menu m2, permissao p where m2.menu_id = m.id and m2.id = p.menu_id and p.grupo_id = ?) order by ordem, descricao", grupoID);
-		
+
 	}
-	
+
 	public List<Menu> pesquisarCabecalhos() {
-		
+
 		StringBuilder query = new StringBuilder();
-		
+
 		query.append(" from Menu m where menuPai is null and flagAtivo = true order by ordem, descricao");
-				
+
 		return super.find(query.toString(), null);
 	}
-		
+
 	public List<Menu> pesquisarExecutaveis() {
-		
+
 		StringBuilder query = new StringBuilder();
-		
-		query.append(" from Menu m where menuPai is not null and flagAtivo = true order by ordem, descricao");
-				
+
+		query.append(" from Menu m left outer join fetch m.menus where m.menuPai is not null and m.flagAtivo = true order by m.ordem, m.descricao");
+
 		return super.find(query.toString(), null);
-	}
-	
-	
+	}	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -203,7 +205,5 @@ public final class Menu extends TSActiveRecordAb<Menu> {
 			return false;
 		return true;
 	}
-	
-	
 
 }

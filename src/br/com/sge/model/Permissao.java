@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import br.com.sge.util.PilotoUtil;
 import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
 
@@ -31,7 +31,7 @@ public class Permissao extends TSActiveRecordAb<Permissao> {
 	private Grupo grupo;
 
 	@ManyToOne
-	@JoinColumn(name = "menu_id")
+	@JoinColumn(name = "menu_id")	 
 	private Menu menu;
 
 	@Column(name = "flag_inserir")
@@ -95,7 +95,7 @@ public class Permissao extends TSActiveRecordAb<Permissao> {
 
 		StringBuilder query = new StringBuilder();
 		
-		query.append(" from Permissao where grupo.id = ? order by menu.ordem, menu.descricao");
+		query.append(" from Permissao p join fetch p.menu m left join fetch m.menus where p.grupo.id = ? order by m.ordem, m.descricao");
 		
 		List<Object> params = new ArrayList<Object>();
 		

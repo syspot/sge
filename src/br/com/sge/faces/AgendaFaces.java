@@ -186,7 +186,7 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 
 				for (Agenda model : getCrudPesquisaModel().findByModel("dataInicial")) {
 
-					sm = new DefaultScheduleEvent(model.getContrato().getDescricaoTotal(), model.getDataInicial(), model.getDataFinal(), false);
+					sm = new DefaultScheduleEvent(model.getId() + "; " + model.getContrato().getDescricaoTotal(), model.getDataInicial(), model.getDataFinal(), false);
 
 					sm.setData(model);
 

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="medicaoCliente" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dropbox\\Desenvolvimento\\Projetos Java\\sge\\WebContent\\WEB-INF\\relatorios\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_INICIAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_FINAL" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLIENTE_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTRATO_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select a.id agenda_id,
+       a.data_inicial data_agenda_inicial,
+       a.data_final data_agenda_final,
+       cl.nome cliente,
+       c.id contrato_id,
+       c.descricao contrato,
+       e.id equipamento_id,
+       e.descricao equipamento,
+       m.id medicao_id,
+       m.data_inicial data_medicao_inicial,
+       m.data_final data_medicao_final,
+       o.id operador_id,
+       o.nome operador,
+       m.valor valor_medicao
+  from agenda a, contrato c, cliente cl, equipamento e, operador o, agenda_medicao m
+ where a.contrato_id = c.id
+   and c.cliente_id = cl.id
+   and a.equipamento_id = e.id
+   and m.operador_id = o.id
+   and m.agenda_id = a.id
+   and a.data_inicial between $P{DATA_INICIAL} and $P{DATA_FINAL}
+   and cl.id = $P{CLIENTE_ID}
+   and c.id = coalesce($P{CONTRATO_ID}, c.id)]]>
+	</queryString>
+	<field name="agenda_id" class="java.lang.Long"/>
+	<field name="data_agenda_inicial" class="java.sql.Timestamp"/>
+	<field name="data_agenda_final" class="java.sql.Timestamp"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="contrato_id" class="java.lang.Long"/>
+	<field name="contrato" class="java.lang.String"/>
+	<field name="equipamento_id" class="java.lang.Integer"/>
+	<field name="equipamento" class="java.lang.String"/>
+	<field name="medicao_id" class="java.lang.Long"/>
+	<field name="data_medicao_inicial" class="java.sql.Timestamp"/>
+	<field name="data_medicao_final" class="java.sql.Timestamp"/>
+	<field name="operador_id" class="java.lang.Integer"/>
+	<field name="operador" class="java.lang.String"/>
+	<field name="valor_medicao" class="java.lang.Double"/>
+	<variable name="valor_medicao_1" class="java.lang.Double" resetType="Group" resetGroup="grpAgenda" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_medicao}]]></variableExpression>
+	</variable>
+	<variable name="valor_medicao_2" class="java.lang.Double" resetType="Group" resetGroup="grpContrato" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_medicao}]]></variableExpression>
+	</variable>
+	<variable name="valor_medicao_3" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_medicao}]]></variableExpression>
+	</variable>
+	<group name="grpContrato">
+		<groupExpression><![CDATA[$F{contrato_id}]]></groupExpression>
+		<groupHeader>
+			<band height="25">
+				<textField>
+					<reportElement x="60" y="1" width="495" height="20"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{contrato_id} + ". " + $F{contrato}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="1" width="60" height="20"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Contrato:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25">
+				<textField pattern="#,###,##0.00">
+					<reportElement x="455" y="0" width="100" height="20"/>
+					<textElement textAlignment="Right">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{valor_medicao_2}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="355" y="0" width="100" height="20"/>
+					<textElement textAlignment="Right">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Contrato:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="grpAgenda">
+		<groupExpression><![CDATA[$F{agenda_id}]]></groupExpression>
+		<groupHeader>
+			<band height="61">
+				<staticText>
+					<reportElement x="13" y="0" width="47" height="20"/>
+					<textElement/>
+					<text><![CDATA[Agenda]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="13" y="20" width="47" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Top"/>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{agenda_id}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="60" y="0" width="101" height="20"/>
+					<textElement/>
+					<text><![CDATA[De]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+					<reportElement x="60" y="20" width="101" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{data_agenda_inicial}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy HH:mm">
+					<reportElement x="161" y="20" width="101" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{data_agenda_final}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="262" y="0" width="293" height="20"/>
+					<textElement/>
+					<text><![CDATA[Equipamento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="161" y="0" width="101" height="20"/>
+					<textElement/>
+					<text><![CDATA[Até]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="262" y="20" width="293" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{equipamento}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="161" y="41" width="101" height="20"/>
+					<textElement/>
+					<text><![CDATA[Até]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="60" y="41" width="101" height="20"/>
+					<textElement/>
+					<text><![CDATA[De]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="13" y="41" width="47" height="20"/>
+					<textElement/>
+					<text><![CDATA[Medição]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="262" y="41" width="193" height="20"/>
+					<textElement/>
+					<text><![CDATA[Operador]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="455" y="41" width="100" height="20"/>
+					<textElement textAlignment="Right"/>
+					<text><![CDATA[Valor (R$)]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="26">
+				<textField pattern="#,###,##0.00">
+					<reportElement x="455" y="0" width="100" height="20"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{valor_medicao_1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="355" y="0" width="100" height="20"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Medição:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="79"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FILTRO">
+					<subreportParameterExpression><![CDATA[$F{cliente}.toUpperCase()]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="TITULO">
+					<subreportParameterExpression><![CDATA["Medição Analítica por cliente"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "cabecalho.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="13" y="1" width="47" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{medicao_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="60" y="1" width="101" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{data_medicao_inicial}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="161" y="1" width="101" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{data_medicao_final}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="262" y="1" width="193" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{operador}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###,##0.00" isBlankWhenNull="false">
+				<reportElement x="455" y="1" width="100" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{valor_medicao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="36">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="34"/>
+				<subreportParameter name="PAGINA">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "rodape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="50">
+			<textField pattern="#,###,##0.00">
+				<reportElement x="455" y="0" width="100" height="20"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{valor_medicao_3}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="355" y="0" width="100" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Geral:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
