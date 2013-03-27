@@ -1,0 +1,53 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="${agendaFaces}" />
+	<ui:param name="mbeanModel" value="${agendaFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${agendaFaces.crudPesquisaModel}" />
+
+	<h:form>
+
+		<h:panelGrid columns="1" style="width: 100%">
+
+			<h:panelGrid columns="2" columnClasses="coluna5,coluna95" style="width: 100%">
+				<p:calendar value="#{mbeanPesquisaModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy" size="10" />
+				<p:commandButton icon="ui-icon-search" value="Pesquisar" action="#{mbean.pesquisarBaseadoEquipamentos}" update="gridAgenda" />
+			</h:panelGrid>
+
+			<p:dataTable id="gridAgenda" value="#{mbean.grid}" var="linha" emptyMessage="Nenhum registro encontrado" rowIndexVar="i">
+
+				<p:column headerText="Equipamento" styleClass="coluna30">
+					<h:selectOneMenu value="#{linha.equipamento.id}" styleClass="ui-selectonemenu ui-widget ui-widget-content ui-corner-all" style="width:98%;padding: 3px" required="true" requiredMessage="Equipamento #{i}: Campo obrigatório">
+						<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+						<f:selectItems value="#{mbean.comboEquipamentosPesquisa}" />
+					</h:selectOneMenu>
+				</p:column>
+
+				<p:column headerText="Tipo" styleClass="coluna10">
+					<h:selectOneMenu value="#{linha.tipoServico.id}" style="width:98%" required="true" requiredMessage="Tipo #{i}: Campo obrigatório">
+						<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+						<f:selectItems value="#{mbean.comboTiposServicos}" />
+					</h:selectOneMenu>
+				</p:column>
+
+				<p:column headerText="Cliente" styleClass="coluna20">
+					<h:selectOneMenu id="cliente" value="#{linha.contrato.cliente.id}" required="true" requiredMessage="Cliente #{i}: Campo obrigatório" style="width:99%">
+						<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+						<f:selectItems value="#{mbean.comboClientes}" />
+
+					</h:selectOneMenu>
+				</p:column>
+
+				<p:column headerText="Contrato" styleClass="coluna20">
+					<h:selectOneMenu id="contrato" value="#{linha.contrato.id}" required="true" requiredMessage="Contrato: Campo obrigatório" style="width:100%">
+						<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+						<f:selectItems value="#{linha.contrato.cliente.contratos}" var="i" itemLabel="#{i.descricao}" itemValue="#{i.id}" />
+					</h:selectOneMenu>
+				</p:column>
+
+			</p:dataTable>
+
+		</h:panelGrid>
+
+	</h:form>
+
+</ui:composition>

@@ -34,8 +34,8 @@ import br.com.topsys.util.TSUtil;
 import br.com.topsys.web.util.TSFacesUtil;
 
 @ViewScoped
-@ManagedBean(name = "agendaFaces")
-public class AgendaFaces extends CrudFaces<Agenda> {
+@ManagedBean(name = "programacaoFaces")
+public class ProgramacaoFaces extends CrudFaces<Agenda> {
 
 	private static final String AVISO_CONCLUIR_MEDICAO = "Para concluir o agendamento deve-se adicionar pelo menos uma medição.";
 	private List<SelectItem> comboClientes;
@@ -88,6 +88,8 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		return null;
 
 	}
+	
+	
 
 	public void atualizarComboOperacoes() {
 
@@ -136,18 +138,6 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		}
 		return 0D;
 
-	}
-	
-	public String pesquisarBaseadoEquipamentos() {
-		
-		setGrid(getCrudPesquisaModel().pesquisarBaseadoEquipamentos());
-		
-		if (TSUtil.isEmpty(getGrid())) {
-			setGrid(new ArrayList<Agenda>());
-		}
-		
-		return null;
-		
 	}
 
 	@Override

@@ -244,6 +244,19 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 
 		return super.find(query.toString(), "a.dataInicial", params.toArray());
 	}
+	
+	
+	public List<Agenda> pesquisarBaseadoEquipamentos() {		
+
+		List<Object> params = new ArrayList<Object>();
+
+		String query = "SELECT A.ID, A.TIPO_SERVICO_ID, A.DATA_INICIAL, A.DATA_FINAL, A.CONTRATO_ID, E.ID EQUIPAMENTO_ID, A.OPERADOR_ID, A.VALOR, A.FLAG_CONCLUIDO, A.OBSERVACAO FROM EQUIPAMENTO E LEFT OUTER JOIN AGENDA A ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ?";
+
+		params.add(dataInicial);					
+
+		return findBySQL(query, params.toArray());
+
+	}
 
 	@Override
 	public int hashCode() {
