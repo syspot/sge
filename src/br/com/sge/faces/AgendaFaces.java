@@ -275,6 +275,10 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 	public void atualizarContratos() {
 		getCrudModel().getContrato().getCliente().setContratos(new Contrato(getCrudModel().getContrato().getCliente()).findByModel("descricao"));
 	}
+	
+	public void atualizarContratos(Contrato contrato) {
+		contrato.getCliente().setContratos(new Contrato(contrato.getCliente()).findByModel("descricao"));
+	}
 
 	public void atualizarContratosPesquisa() {
 		getCrudPesquisaModel().getContrato().getCliente().setContratos(new Contrato(getCrudPesquisaModel().getContrato().getCliente()).findByModel("descricao"));

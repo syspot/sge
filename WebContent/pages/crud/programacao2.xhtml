@@ -33,15 +33,17 @@
 					<h:selectOneMenu id="cliente" value="#{linha.contrato.cliente.id}" required="true" requiredMessage="Cliente #{i}: Campo obrigatório" style="width:99%">
 						<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 						<f:selectItems value="#{mbean.comboClientes}" />
-
+						<p:ajax event="change" listener="#{mbean.atualizarContratos(linha.contrato)}" />
 					</h:selectOneMenu>
 				</p:column>
 
 				<p:column headerText="Contrato" styleClass="coluna20">
-					<h:selectOneMenu id="contrato" value="#{linha.contrato.id}" required="true" requiredMessage="Contrato: Campo obrigatório" style="width:100%">
-						<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-						<f:selectItems value="#{linha.contrato.cliente.contratos}" var="i" itemLabel="#{i.descricao}" itemValue="#{i.id}" />
-					</h:selectOneMenu>
+					<p:outputPanel layout="block" autoUpdate="true">
+						<h:selectOneMenu id="contrato" value="#{linha.contrato.id}" required="true" requiredMessage="Contrato: Campo obrigatório" style="width:100%">
+							<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+							<f:selectItems value="#{linha.contrato.cliente.contratos}" var="i" itemLabel="#{i.descricao}" itemValue="#{i.id}" />
+						</h:selectOneMenu>
+					</p:outputPanel>
 				</p:column>
 
 			</p:dataTable>

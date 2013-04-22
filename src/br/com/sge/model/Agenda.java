@@ -250,18 +250,15 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 	
 	
 	public List<Agenda> pesquisarBaseadoEquipamentos() {		
+		
         TSDataBaseBrokerIf dataBaseBrokerIf = TSDataBaseBrokerFactory.getDataBaseBrokerIf();
 
-        String query = "SELECT A.ID, A.TIPO_SERVICO_ID, A.DATA_INICIAL, A.DATA_FINAL, A.CONTRATO_ID, E.ID EQUIPAMENTO_ID, A.OPERADOR_ID, A.VALOR, A.FLAG_CONCLUIDO, A.OBSERVACAO FROM EQUIPAMENTO E LEFT OUTER JOIN AGENDA A ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ?";
+        String query = "SELECT A.ID, A.TIPO_SERVICO_ID, A.DATA_INICIAL, A.DATA_FINAL, (SELECT CT.CLIENTE_ID FROM CONTRATO CT WHERE CT.ID = A.CONTRATO_ID), A.CONTRATO_ID, E.ID EQUIPAMENTO_ID, A.OPERADOR_ID, A.VALOR, A.FLAG_CONCLUIDO, A.OBSERVACAO FROM EQUIPAMENTO E LEFT OUTER JOIN AGENDA A ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ?";
 
-        dataBaseBrokerIf.setSQL(query,dataInicial);
-         List<Agenda> a = dataBaseBrokerIf.getCollectionBean(Agenda.class,"id","tipoServico.id","dataInicial","dataFinal","contrato.id","equipamento.id", "operador.id","valor","flagConcluido","observacao");
-         
-     
+        dataBaseBrokerIf.setSQL(query, dataInicial);
+         List<Agenda> a = dataBaseBrokerIf.getCollectionBean(Agenda.class,"id","tipoServico.id","dataInicial","dataFinal", "contrato.cliente.id", "contrato.id","equipamento.id", "operador.id","valor","flagConcluido","observacao");              
          
          return a;
-		
-
 
 	}
 
