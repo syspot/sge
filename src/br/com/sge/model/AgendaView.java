@@ -19,15 +19,12 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import br.com.topsys.database.TSDataBaseBrokerIf;
-import br.com.topsys.database.factory.TSDataBaseBrokerFactory;
 import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
 
-
 @Entity
-@Table(name = "agenda")
-public class Agenda extends TSActiveRecordAb<Agenda> {
+@Table(name = "vw_agenda")
+public class AgendaView extends TSActiveRecordAb<AgendaView> {
 
 	@Id
 	@SequenceGenerator(name = "AGENDA_ID_SEQ", sequenceName = "agenda_id_seq", allocationSize = 1)
@@ -67,11 +64,11 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 	@OrderBy("dataInicial")
 	private List<Medicao> medicoes;
 
-	public Agenda() {
+	public AgendaView() {
 
 	}
 
-	public Agenda(Boolean flagConcluido) {
+	public AgendaView(Boolean flagConcluido) {
 		this.flagConcluido = flagConcluido;
 	}
 
@@ -168,12 +165,12 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 	}
 	
 	@Override
-	public List<Agenda> findByModel(String... fieldsOrderBy) {
+	public List<AgendaView> findByModel(String... fieldsOrderBy) {
 		return findByModel(null,fieldsOrderBy);
 	}
 	
 	@Override
-	public List<Agenda> findByModel(Map<String, Object> map,String... fieldsOrderBy) {
+	public List<AgendaView> findByModel(Map<String, Object> map,String... fieldsOrderBy) {
 
 		StringBuilder query = new StringBuilder();
 
@@ -249,19 +246,30 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 	}
 	
 	
-	public List<Agenda> pesquisarBaseadoEquipamentos() {		
-        TSDataBaseBrokerIf dataBaseBrokerIf = TSDataBaseBrokerFactory.getDataBaseBrokerIf();
+	public List<AgendaView> pesquisarBaseadoEquipamentos() {		
 
-        String query = "SELECT A.ID, A.TIPO_SERVICO_ID, A.DATA_INICIAL, A.DATA_FINAL, A.CONTRATO_ID, E.ID EQUIPAMENTO_ID, A.OPERADOR_ID, A.VALOR, A.FLAG_CONCLUIDO, A.OBSERVACAO FROM EQUIPAMENTO E LEFT OUTER JOIN AGENDA A ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ?";
+		List<Object> params = new ArrayList<Object>();
 
-        dataBaseBrokerIf.setSQL(query,dataInicial);
-         List<Agenda> a = dataBaseBrokerIf.getCollectionBean(Agenda.class,"id","tipoServico.id","dataInicial","dataFinal","contrato.id","equipamento.id", "operador.id","valor","flagConcluido","observacao");
-         
-     
-         
-         return a;
+		String query = "SELECT A.ID, A.TIPO_SERVICO_ID, A.DATA_INICIAL, A.DATA_FINAL, A.CONTRATO_ID, E.ID EQUIPAMENTO_ID, A.OPERADOR_ID, A.VALOR, A.FLAG_CONCLUIDO, A.OBSERVACAO FROM EQUIPAMENTO E LEFT OUTER JOIN AGENDA A ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ?";
+
+		params.add(dataInicial);					
+
+		return findBySQL(query, params.toArray());
+
+	}
+	
+	public List<AgendaView> pesquisarBaseadoEquipamentos2() {				
+
+		//String query = "from Agenda a right outer join a.equipamento e with a.equipamento_id = e.id and a.data_inicial = ?";
 		
+		String query = "SELECT a.*,e.* FROM AGENDA A RIGHT OUTER JOIN EQUIPAMENTO E ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ?";
 
+
+		return (List<AgendaView>) super.getSession().createSQLQuery(query)
+		 .addEntity("agenda", AgendaView.class).addJoin("e","agenda.equipamento")
+		 .setDate(0, dataInicial).list();
+		
+		
 
 	}
 
@@ -291,7 +299,7 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Agenda other = (Agenda) obj;
+		AgendaView other = (AgendaView) obj;
 		if (contrato == null) {
 			if (other.contrato != null)
 				return false;

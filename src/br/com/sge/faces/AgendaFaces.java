@@ -137,17 +137,17 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		return 0D;
 
 	}
-	
+
 	public String pesquisarBaseadoEquipamentos() {
-		
+
 		setGrid(getCrudPesquisaModel().pesquisarBaseadoEquipamentos());
-		
+
 		if (TSUtil.isEmpty(getGrid())) {
 			setGrid(new ArrayList<Agenda>());
 		}
-		
+
 		return null;
-		
+
 	}
 
 	@Override
