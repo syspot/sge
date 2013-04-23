@@ -1010,3 +1010,10 @@ ui-icon.delete {
 .colunaPequena {
 	width: 10px; text-align: center;
 }
+
+.laranja {
+	background-color: gold !important;
+	background-image: none !important;
+	color: #000000 !important;
+}
+

@@ -85,6 +85,20 @@ public class AutenticacaoFaces extends TSMainFaces {
 
 	}
 	
+	public boolean isTelaProgramacao() {
+
+		if (!TSUtil.isEmpty(this.PermissaoSelecionada) && 
+			!TSUtil.isEmpty(this.PermissaoSelecionada.getMenu()) &&
+			!TSUtil.isEmpty(this.PermissaoSelecionada.getMenu().getId())) {
+			
+			return Constantes.TELA_PROGRAMACAO.equals(this.PermissaoSelecionada.getMenu().getId());
+			
+		}
+		
+		return false;
+
+	}
+	
 	public boolean isTelaFinanceiro() {
 
 		if (!TSUtil.isEmpty(this.PermissaoSelecionada) && 

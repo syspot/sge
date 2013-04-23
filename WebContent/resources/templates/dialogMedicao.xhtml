@@ -1,0 +1,79 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<p:dialog modal="true" id="painel" header="Agendamento" position="center" widgetVar="eventDialog" styleClass="dialog90" rendered="#{autenticacaoFaces.telaProgramacao}">
+
+		<p:fieldset id="fsMedicao" legend="Medições" style="width: 97%">
+
+			<h:panelGrid columns="1">
+
+				<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{agendaFaces.addMedicao}" update="gridMedicao" />
+
+				<p:dataTable id="gridMedicao" value="#{agendaFaces.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="3" paginatorAlwaysVisible="false" rowIndexVar="i">
+
+					<p:column headerText="#">
+        					#{i+1}
+    					</p:column>
+
+					<p:column headerText="Código" styleClass="coluna5">
+						<div align="center">
+							<h:outputText value="#{linha.id}" />
+						</div>
+					</p:column>
+
+					<p:column headerText="Data Inicial" styleClass="coluna15">
+						<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Inicial Medição #{i}: Campo obrigatório">
+							<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+						</p:calendar>
+					</p:column>
+
+					<p:column headerText="Data Final" styleClass="coluna15">
+
+						<p:calendar value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Final Medição #{i}: Campo obrigatório">
+							<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+						</p:calendar>
+
+					</p:column>
+
+					<p:column headerText="Operador" styleClass="coluna25">
+						<p:selectOneMenu id="operadorMedicao" value="#{linha.operadorTemp.id}" required="true" requiredMessage="Operador Medição #{i}: Campo obrigatório" style="width:98%">
+							<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+							<f:selectItems value="#{agendaFaces.comboOperadoresPesquisa}" />
+						</p:selectOneMenu>
+					</p:column>
+
+					<p:column headerText="Obs." styleClass="coluna25">
+						<p:inputTextarea rows="2" value="#{linha.observacao}" style="width: 95%" autoResize="false" />
+					</p:column>
+
+					<p:column id="colValor#{i}" headerText="Valor" styleClass="coluna15">
+						<p:outputPanel id="teste" layout="block" autoUpdate="true">
+							<p:inputText id="valorMedicao#{i}" style="width: 90%; text-align: right" value="#{linha.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor Medição #{i}: Campo obrigatório">
+								<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+							</p:inputText>
+						</p:outputPanel>
+					</p:column>
+
+					<p:column headerText="Excluir" styleClass="coluna5">
+
+						<div align="center">
+
+							<p:commandLink action="#{agendaFaces.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update=":formDialog:fsMedicao gridMedicao" global="false">
+
+								<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+								<f:setPropertyActionListener target="#{agendaFaces.medicaoSelecionada}" value="#{linha}" />
+
+							</p:commandLink>
+
+						</div>
+
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+		</p:fieldset>		
+
+	</p:dialog>
+
+</ui:composition>

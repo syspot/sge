@@ -51,7 +51,10 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 	private ScheduleEvent event = new DefaultScheduleEvent();
 	private DefaultScheduleEvent sm;
 
+	private Agenda agendaSelecionada;
 	private Medicao medicaoSelecionada;
+
+	private List<Medicao> Medicoes;
 
 	@PostConstruct
 	protected void init() {
@@ -60,6 +63,7 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		this.comboClientes = super.initCombo(new Cliente(Boolean.TRUE).findByModel("nome"), "id", "nome");
 		this.comboOperadoresPesquisa = super.initCombo(new Operador(Boolean.TRUE).findByModel("nome"), "id", "nome");
 		this.comboEquipamentosPesquisa = super.initCombo(new Equipamento(Boolean.TRUE).findByModel("descricao"), "id", "descricao");
+		this.Medicoes = new ArrayList<Medicao>();
 		setFieldOrdem("dataInicial");
 		instanciarAgenda();
 	}
@@ -275,7 +279,7 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 	public void atualizarContratos() {
 		getCrudModel().getContrato().getCliente().setContratos(new Contrato(getCrudModel().getContrato().getCliente()).findByModel("descricao"));
 	}
-	
+
 	public void atualizarContratos(Contrato contrato) {
 		contrato.getCliente().setContratos(new Contrato(contrato.getCliente()).findByModel("descricao"));
 	}
@@ -288,19 +292,40 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		getCrudModel().setTipoServico(getCrudModel().getTipoServico().getById());
 	}
 
+	public void salvarAlteracoes() throws TSApplicationException {
+
+		for (Agenda agenda : getGrid()) {
+
+			if (TSUtil.isEmpty(agenda.getId())) {
+				agenda.setDataInicial(getCrudPesquisaModel().getDataInicial());
+				insert();
+			} else {
+				update();
+			}
+
+		}
+
+	}
+
 	public void addMedicao() {
 		Medicao medicao = new Medicao();
-		medicao.setAgenda(this.getCrudModel());
+		medicao.setAgenda(getCrudModel());
 		medicao.setOperador(new Operador());
 		medicao.setOperadorTemp(new Operador());
-		if (!TSUtil.isEmpty(getCrudModel().getOperador()) && !TSUtil.isEmpty(getCrudModel().getOperador().getId())) {
-			medicao.getOperadorTemp().setId(getCrudModel().getOperador().getId());
+		/*
+		 * if (!TSUtil.isEmpty(getCrudModel().getOperador()) &&
+		 * !TSUtil.isEmpty(getCrudModel().getOperador().getId())) {
+		 * medicao.getOperadorTemp
+		 * ().setId(getCrudModel().getOperador().getId()); } if
+		 * (this.getCrudModel().getMedicoes().isEmpty()) {
+		 * medicao.setDataInicial(getCrudModel().getDataInicial());
+		 * medicao.setDataFinal(getCrudModel().getDataFinal());
+		 * medicao.setValor(getCrudModel().getValor()); }
+		 */
+		if (TSUtil.isEmpty(this.getCrudModel().getMedicoes())) {
+			this.getCrudModel().setMedicoes(new ArrayList<Medicao>());
 		}
-		if (this.getCrudModel().getMedicoes().isEmpty()) {
-			medicao.setDataInicial(getCrudModel().getDataInicial());
-			medicao.setDataFinal(getCrudModel().getDataFinal());
-			medicao.setValor(getCrudModel().getValor());
-		}
+		
 		this.getCrudModel().getMedicoes().add(medicao);
 	}
 
@@ -308,7 +333,7 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		this.getCrudModel().getMedicoes().remove(this.medicaoSelecionada);
 	}
 
-	protected boolean validaCampos() {
+	/*protected boolean validaCampos() {
 
 		RequestContext context = RequestContext.getCurrentInstance();
 
@@ -321,7 +346,8 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		context.addCallbackParam("valido", true);
 
 		return false;
-	}
+				
+	}*/
 
 	public List<SelectItem> getComboContratos() {
 		return comboContratos;
@@ -417,6 +443,22 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 
 	public void setComboEquipamentosPesquisa(List<SelectItem> comboEquipamentosPesquisa) {
 		this.comboEquipamentosPesquisa = comboEquipamentosPesquisa;
+	}
+
+	public Agenda getAgendaSelecionada() {
+		return agendaSelecionada;
+	}
+
+	public void setAgendaSelecionada(Agenda agendaSelecionada) {
+		this.agendaSelecionada = agendaSelecionada;
+	}
+
+	public List<Medicao> getMedicoes() {
+		return Medicoes;
+	}
+
+	public void setMedicoes(List<Medicao> medicoes) {
+		Medicoes = medicoes;
 	}
 
 }
