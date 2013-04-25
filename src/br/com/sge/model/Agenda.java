@@ -18,12 +18,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import br.com.topsys.database.TSDataBaseBrokerIf;
 import br.com.topsys.database.factory.TSDataBaseBrokerFactory;
 import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
-
 
 @Entity
 @Table(name = "agenda")
@@ -41,38 +41,25 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 	@ManyToOne
 	@JoinColumn(name = "tipo_servico_id")
 	private TipoServico tipoServico;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "equipamento_id")
 	private Equipamento equipamento;
-	
-	@ManyToOne
-	@JoinColumn(name = "operador_id")
-	private Operador operador;
-	
+
 	@Column(name = "data_inicial")
 	private Date dataInicial;
-	
-	@Column(name = "data_final")
-	private Date dataFinal;
 
-	private Double valor;
-
-	@Column(name = "flag_concluido")	
-	private Boolean flagConcluido;
-	
 	private String observacao;
-	
-	@OneToMany(mappedBy = "agenda", cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
+
+	@OneToMany(mappedBy = "agenda", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@OrderBy("dataInicial")
 	private List<Medicao> medicoes;
+	
+	@Transient
+	private Long sequencia;
 
 	public Agenda() {
 
-	}
-
-	public Agenda(Boolean flagConcluido) {
-		this.flagConcluido = flagConcluido;
 	}
 
 	public Long getId() {
@@ -81,10 +68,6 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getSituacao() {
-		return (flagConcluido.equals(Boolean.TRUE) ? "Concluído" : "Em Aberto");
 	}
 
 	public Contrato getContrato() {
@@ -111,44 +94,12 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 		this.equipamento = equipamento;
 	}
 
-	public Operador getOperador() {
-		return operador;
-	}
-
-	public void setOperador(Operador operador) {
-		this.operador = operador;
-	}
-
 	public Date getDataInicial() {
 		return dataInicial;
 	}
 
 	public void setDataInicial(Date dataInicial) {
 		this.dataInicial = dataInicial;
-	}
-
-	public Date getDataFinal() {
-		return dataFinal;
-	}
-
-	public void setDataFinal(Date dataFinal) {
-		this.dataFinal = dataFinal;
-	}
-
-	public Double getValor() {
-		return valor;
-	}
-
-	public void setValor(Double valor) {
-		this.valor = valor;
-	}
-
-	public Boolean getFlagConcluido() {
-		return flagConcluido;
-	}
-
-	public void setFlagConcluido(Boolean flagConcluido) {
-		this.flagConcluido = flagConcluido;
 	}
 
 	public List<Medicao> getMedicoes() {
@@ -166,100 +117,83 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
 	}
-	
+
 	@Override
 	public List<Agenda> findByModel(String... fieldsOrderBy) {
-		return findByModel(null,fieldsOrderBy);
+		return findByModel(null, fieldsOrderBy);
 	}
-	
+
 	@Override
-	public List<Agenda> findByModel(Map<String, Object> map,String... fieldsOrderBy) {
+	public List<Agenda> findByModel(Map<String, Object> map, String... fieldsOrderBy) {
 
 		StringBuilder query = new StringBuilder();
 
-		query.append(" from Agenda a where 1=1 ");				
+		query.append(" from Agenda a where 1=1 ");
 
 		if (!TSUtil.isEmpty(tipoServico) && !TSUtil.isEmpty(tipoServico.getId())) {
 			query.append("and a.tipoServico.id = ? ");
 		}
-		
+
 		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getId())) {
 			query.append("and a.contrato.id = ? ");
 		}
-		
+
 		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getCliente()) && !TSUtil.isEmpty(contrato.getCliente().getId())) {
 			query.append("and a.contrato.cliente.id = ? ");
 		}
-		
+
 		if (!TSUtil.isEmpty(equipamento) && !TSUtil.isEmpty(equipamento.getId())) {
 			query.append("and a.equipamento.id = ? ");
-		}
-		
-		if (!TSUtil.isEmpty(operador) && !TSUtil.isEmpty(operador.getId())) {
-			query.append("and a.operador.id = ? ");
-		}
-		
-		if (!TSUtil.isEmpty(flagConcluido)) {
-			query.append("and a.flagConcluido = ? ");
 		}
 
 		if (!TSUtil.isEmpty(dataInicial)) {
 			query.append("and a.dataInicial >= ? ");
 		}
 
-		if (!TSUtil.isEmpty(dataFinal)) {
-			query.append("and a.dataFinal <= ?");
-		}
-
 		List<Object> params = new ArrayList<Object>();
-		
+
 		if (!TSUtil.isEmpty(tipoServico) && !TSUtil.isEmpty(tipoServico.getId())) {
 			params.add(tipoServico.getId());
 		}
-		
+
 		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getId())) {
 			params.add(contrato.getId());
 		}
-		
+
 		if (!TSUtil.isEmpty(contrato) && !TSUtil.isEmpty(contrato.getCliente()) && !TSUtil.isEmpty(contrato.getCliente().getId())) {
 			params.add(contrato.getCliente().getId());
 		}
-		
+
 		if (!TSUtil.isEmpty(equipamento) && !TSUtil.isEmpty(equipamento.getId())) {
 			params.add(equipamento.getId());
-		}
-		
-		if (!TSUtil.isEmpty(operador) && !TSUtil.isEmpty(operador.getId())) {
-			params.add(operador.getId());
-		}
-
-		if (!TSUtil.isEmpty(flagConcluido)) {
-			params.add(flagConcluido);
 		}
 
 		if (!TSUtil.isEmpty(dataInicial)) {
 			params.add(dataInicial);
 		}
 
-		if (!TSUtil.isEmpty(dataFinal)) {
-			params.add(dataFinal);
-		}
-
-		return super.find(query.toString(), "a.dataInicial", params.toArray());
+		return super.find(query.toString(), "a.dataInicial, a.id", params.toArray());
 	}
-	
-	
-	public List<Agenda> pesquisarBaseadoEquipamentos() {		
-		
-        TSDataBaseBrokerIf dataBaseBrokerIf = TSDataBaseBrokerFactory.getDataBaseBrokerIf();
 
-        String query = "SELECT A.ID, A.TIPO_SERVICO_ID, A.DATA_INICIAL, A.DATA_FINAL, (SELECT CT.CLIENTE_ID FROM CONTRATO CT WHERE CT.ID = A.CONTRATO_ID), A.CONTRATO_ID, E.ID EQUIPAMENTO_ID, A.OPERADOR_ID, A.VALOR, A.FLAG_CONCLUIDO, A.OBSERVACAO FROM EQUIPAMENTO E LEFT OUTER JOIN AGENDA A ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ?";
+	public List<Agenda> pesquisarBaseadoEquipamentos() {
 
-        dataBaseBrokerIf.setSQL(query, dataInicial);
-         List<Agenda> a = dataBaseBrokerIf.getCollectionBean(Agenda.class,"id","tipoServico.id","dataInicial","dataFinal", "contrato.cliente.id", "contrato.id","equipamento.id", "operador.id","valor","flagConcluido","observacao");              
-         
-         return a;
+		TSDataBaseBrokerIf dataBaseBrokerIf = TSDataBaseBrokerFactory.getDataBaseBrokerIf();
 
+		String query = "SELECT ROW_NUMBER() OVER (PARTITION by 0), A.ID, A.TIPO_SERVICO_ID, COALESCE(A.DATA_INICIAL, ?), (SELECT CT.CLIENTE_ID FROM CONTRATO CT WHERE CT.ID = A.CONTRATO_ID), A.CONTRATO_ID, E.ID EQUIPAMENTO_ID, A.OBSERVACAO FROM EQUIPAMENTO E LEFT OUTER JOIN AGENDA A ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ? ORDER BY ID";
+
+		dataBaseBrokerIf.setSQL(query, dataInicial, dataInicial);
+		List<Agenda> a = dataBaseBrokerIf.getCollectionBean(Agenda.class, "sequencia", "id", "tipoServico.id", "dataInicial", "contrato.cliente.id", "contrato.id", "equipamento.id", "observacao");
+
+		return a;
+
+	}	
+
+	public Long getSequencia() {
+		return sequencia;
+	}
+
+	public void setSequencia(Long sequencia) {
+		this.sequencia = sequencia;
 	}
 
 	@Override
@@ -267,16 +201,13 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((contrato == null) ? 0 : contrato.hashCode());
-		result = prime * result + ((dataFinal == null) ? 0 : dataFinal.hashCode());
 		result = prime * result + ((dataInicial == null) ? 0 : dataInicial.hashCode());
 		result = prime * result + ((equipamento == null) ? 0 : equipamento.hashCode());
-		result = prime * result + ((flagConcluido == null) ? 0 : flagConcluido.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((medicoes == null) ? 0 : medicoes.hashCode());
 		result = prime * result + ((observacao == null) ? 0 : observacao.hashCode());
-		result = prime * result + ((operador == null) ? 0 : operador.hashCode());
+		result = prime * result + ((sequencia == null) ? 0 : sequencia.hashCode());
 		result = prime * result + ((tipoServico == null) ? 0 : tipoServico.hashCode());
-		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
 	}
 
@@ -294,11 +225,6 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 				return false;
 		} else if (!contrato.equals(other.contrato))
 			return false;
-		if (dataFinal == null) {
-			if (other.dataFinal != null)
-				return false;
-		} else if (!dataFinal.equals(other.dataFinal))
-			return false;
 		if (dataInicial == null) {
 			if (other.dataInicial != null)
 				return false;
@@ -308,11 +234,6 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 			if (other.equipamento != null)
 				return false;
 		} else if (!equipamento.equals(other.equipamento))
-			return false;
-		if (flagConcluido == null) {
-			if (other.flagConcluido != null)
-				return false;
-		} else if (!flagConcluido.equals(other.flagConcluido))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -329,21 +250,18 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 				return false;
 		} else if (!observacao.equals(other.observacao))
 			return false;
-		if (operador == null) {
-			if (other.operador != null)
+		if (sequencia == null) {
+			if (other.sequencia != null)
 				return false;
-		} else if (!operador.equals(other.operador))
+		} else if (!sequencia.equals(other.sequencia))
 			return false;
 		if (tipoServico == null) {
 			if (other.tipoServico != null)
 				return false;
 		} else if (!tipoServico.equals(other.tipoServico))
 			return false;
-		if (valor == null) {
-			if (other.valor != null)
-				return false;
-		} else if (!valor.equals(other.valor))
-			return false;
 		return true;
 	}
+
+	
 }

@@ -8,15 +8,16 @@
 
 		<h:panelGrid columns="1" style="width: 100%">
 
-			<h:panelGrid columns="3" columnClasses="coluna5, coluna5, coluna95" style="width: 100%">
-				<p:calendar value="#{mbeanPesquisaModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy" size="10" required="true" requiredMessage="Preencha a data para pesquisar."/>
-				<p:commandButton icon="ui-icon-search" value="Pesquisar" action="#{mbean.pesquisarBaseadoEquipamentos}" update="gridAgenda" />
-				<p:commandButton icon="ui-icon-disk" action="#{mbean.salvarAlteracoes}" value="Salvar Alterações" update="@form" />
+			<h:panelGrid columns="4" columnClasses="coluna5, coluna5, coluna75, coluna15" style="width: 100%">
+				<p:calendar id="calPesquisa" value="#{mbeanPesquisaModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy" size="10" required="true" requiredMessage="Preencha a data para pesquisar." />
+				<p:commandButton icon="ui-icon-search" value="Pesquisar" action="#{mbean.pesquisarBaseadoEquipamentos}" process="@this calPesquisa" update="@form" />
+				<p:commandButton icon="ui-icon-plus" action="#{mbean.addAgenda}" value="Programação" disabled="#{empty mbeanPesquisaModel.dataInicial}" update="@form" />
+				<p:commandButton icon="ui-icon-disk" action="#{mbean.salvarAlteracoes}" value="Salvar Alterações" update="@form" disabled="#{empty mbeanPesquisaModel.dataInicial}" style="width: 150px" />
 			</h:panelGrid>
 
-			<p:scrollPanel mode="native" style="width: 99.5%; height: 300px">
+			<p:scrollPanel mode="native" style="width: 99.5%; height: 290px">
 
-				<p:dataTable rowStyleClass="#{linha==mbean.agendaSelecionada?laranja:null}" style="width: 99%" id="gridAgenda" value="#{mbean.grid}" var="linha" emptyMessage="Nenhum registro encontrado" rowIndexVar="i">
+				<p:dataTable rowStyleClass="#{linha.sequencia == mbean.crudModel.sequencia? mbean.laranja:null}" style="width: 99%" id="gridAgenda" value="#{mbean.grid}" var="linha" emptyMessage="Nenhum registro encontrado" rowIndexVar="i">
 
 					<p:column headerText="Equipamento" styleClass="coluna30">
 						<h:selectOneMenu value="#{linha.equipamento.id}" style="width:99%;padding: 3px">
@@ -51,7 +52,7 @@
 
 					<p:column styleClass="coluna3">
 						<div align="center">
-							<p:commandLink id="clSelecionar" update="gridAgenda">
+							<p:commandLink id="clSelecionar" update="gridAgenda @form">
 								<h:graphicImage value="../resources/images/lupa.png" style="border: 0px;width: 16px; height: 16px" />
 								<f:setPropertyActionListener target="#{mbean.crudModel}" value="#{linha}" />
 							</p:commandLink>
@@ -62,81 +63,76 @@
 
 			</p:scrollPanel>
 
-			<p:outputPanel id="opMedicao" layout="block" autoUpdate="true">
+			<p:panel id="fsMedicao" header="Medições" style="width: 99%">
 
-				<p:panel id="fsMedicao" header="Medições" style="width: 99%">
+				<f:facet name="header">
+					<h:panelGrid columns="2" columnClasses="coluna85, coluna15" style="width: 100%">
+						<h:outputText value="Medições" />
+						<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{mbean.addMedicao}" update="gridMedicao" disabled="#{empty mbeanPesquisaModel.dataInicial or empty mbeanModel}" style="width: 150px" />
+					</h:panelGrid>
+				</f:facet>
 
-					<h:panelGrid columns="1">
+				<p:scrollPanel mode="native" style="width: 99.5%; height: 130px">
 
-						<p:commandButton id="btnReferencia" value="Adicionar Medição" icon="ui-icon-plus" action="#{mbean.addMedicao}" update="gridMedicao" />
+					<p:dataTable id="gridMedicao" value="#{mbean.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" rowIndexVar="i">
 
-						<p:dataTable id="gridMedicao" value="#{mbean.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="3" paginatorAlwaysVisible="false" rowIndexVar="i">
-
-							<p:column headerText="#">
+						<p:column headerText="#">
         					#{i+1}
     					</p:column>
 
-							<p:column headerText="Código" styleClass="coluna5">
-								<div align="center">
-									<h:outputText value="#{linha.id}" />
-								</div>
-							</p:column>
+						<p:column headerText="Data Inicial" styleClass="coluna15">
+							<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Inicial Medição #{i}: Campo obrigatório">
+								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+							</p:calendar>
+						</p:column>
 
-							<p:column headerText="Data Inicial" styleClass="coluna15">
-								<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Inicial Medição #{i}: Campo obrigatório">
-									<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
-								</p:calendar>
-							</p:column>
+						<p:column headerText="Data Final" styleClass="coluna15">
 
-							<p:column headerText="Data Final" styleClass="coluna15">
+							<p:calendar value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Final Medição #{i}: Campo obrigatório">
+								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+							</p:calendar>
 
-								<p:calendar value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Final Medição #{i}: Campo obrigatório">
-									<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
-								</p:calendar>
+						</p:column>
 
-							</p:column>
+						<p:column headerText="Operador" styleClass="coluna25">
+							<h:selectOneMenu id="operadorMedicao" value="#{linha.operador.id}" required="true" requiredMessage="Operador Medição #{i}: Campo obrigatório" style="padding: 3px; width:98%">
+								<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+								<f:selectItems value="#{agendaFaces.comboOperadoresPesquisa}" />
+							</h:selectOneMenu>
+						</p:column>
 
-							<p:column headerText="Operador" styleClass="coluna25">
-								<p:selectOneMenu id="operadorMedicao" value="#{linha.operadorTemp.id}" required="true" requiredMessage="Operador Medição #{i}: Campo obrigatório" style="width:98%">
-									<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-									<f:selectItems value="#{agendaFaces.comboOperadoresPesquisa}" />
-								</p:selectOneMenu>
-							</p:column>
+						<p:column headerText="Obs." styleClass="coluna35">
+							<p:inputText value="#{linha.observacao}" style="width: 95%" />
+						</p:column>
 
-							<p:column headerText="Obs." styleClass="coluna25">
-								<p:inputTextarea rows="2" value="#{linha.observacao}" style="width: 95%" autoResize="false" />
-							</p:column>
+						<p:column id="colValor#{i}" headerText="Valor" styleClass="coluna15">
+							<p:outputPanel id="teste" layout="block" autoUpdate="true">
+								<p:inputText id="valorMedicao#{i}" style="width: 90%; text-align: right" value="#{linha.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor Medição #{i}: Campo obrigatório">
+									<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
+								</p:inputText>
+							</p:outputPanel>
+						</p:column>
 
-							<p:column id="colValor#{i}" headerText="Valor" styleClass="coluna15">
-								<p:outputPanel id="teste" layout="block" autoUpdate="true">
-									<p:inputText id="valorMedicao#{i}" style="width: 90%; text-align: right" value="#{linha.valor}" onkeyup="return mascaraMoeda(this)" required="true" requiredMessage="Valor Medição #{i}: Campo obrigatório">
-										<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
-									</p:inputText>
-								</p:outputPanel>
-							</p:column>
+						<p:column headerText="Excluir" styleClass="coluna5" rendered="false">
 
-							<p:column headerText="Excluir" styleClass="coluna5">
+							<div align="center">
 
-								<div align="center">
+								<p:commandLink action="#{agendaFaces.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update=":formDialog:fsMedicao gridMedicao" global="false">
 
-									<p:commandLink action="#{agendaFaces.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update=":formDialog:fsMedicao gridMedicao" global="false">
+									<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+									<f:setPropertyActionListener target="#{agendaFaces.medicaoSelecionada}" value="#{linha}" />
 
-										<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
-										<f:setPropertyActionListener target="#{agendaFaces.medicaoSelecionada}" value="#{linha}" />
+								</p:commandLink>
 
-									</p:commandLink>
+							</div>
 
-								</div>
+						</p:column>
 
-							</p:column>
+					</p:dataTable>
 
-						</p:dataTable>
+				</p:scrollPanel>
 
-					</h:panelGrid>
-
-				</p:panel>
-
-			</p:outputPanel>
+			</p:panel>
 
 		</h:panelGrid>
 

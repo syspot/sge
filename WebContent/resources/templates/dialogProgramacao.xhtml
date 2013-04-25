@@ -11,14 +11,12 @@
 				<p:outputLabel for="contrato" value="Contrato" />
 
 				<p:selectOneMenu id="tipoServico" value="#{agendaFaces.crudModel.tipoServico.id}" required="true" requiredMessage="Tipo do Serviço: Campo obrigatório" style="width:95%">
-					<f:selectItems value="#{agendaFaces.comboTiposServicos}" />
-					<p:ajax event="change" listener="#{agendaFaces.atualizarValorAgenda}" process="tipoServico dataInicial dataFinal @this" update="valor" global="false" />
+					<f:selectItems value="#{agendaFaces.comboTiposServicos}" />					
 				</p:selectOneMenu>
 
 				<p:selectOneMenu id="cliente" value="#{agendaFaces.crudModel.contrato.cliente.id}" required="true" requiredMessage="Cliente: Campo obrigatório" style="width:99%">
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-					<f:selectItems value="#{agendaFaces.comboClientes}" />
-					<p:ajax event="change" listener="#{agendaFaces.atualizarContratos}" update="contrato" global="false" />
+					<f:selectItems value="#{agendaFaces.comboClientes}" />					
 				</p:selectOneMenu>
 
 				<p:selectOneMenu id="contrato" value="#{agendaFaces.crudModel.contrato.id}" required="true" requiredMessage="Contrato: Campo obrigatório" style="width:100%">
@@ -28,45 +26,26 @@
 
 			</h:panelGrid>
 
-			<h:panelGrid columns="5" columnClasses="coluna10, coluna10, coluna35, coluna30, coluna15" style="width: 100%">
+			<h:panelGrid columns="2" columnClasses="coluna10, coluna90" style="width: 100%">
 
 				<p:outputLabel for="dataInicial" value="Data Inicial" />
-				<p:outputLabel for="dataFinal" value="Data Final" />
 				<p:outputLabel for="equipamento" value="Equipamento" />
-				<p:outputLabel for="operador" value="Operador" />
-				<p:outputLabel for="valor" value="Valor" />
+
 
 				<p:calendar id="dataInicial" required="true" requiredMessage="Data Inicial: Valor obrigatório" value="#{agendaFaces.crudModel.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="16">
-					<p:ajax event="change" listener="#{agendaFaces.atualizarComboOperacoes}" process="@this dataFinal" update="equipamento operador" global="false" />
-					<p:ajax event="change" listener="#{agendaFaces.atualizarValorAgenda}" process="tipoServico dataInicial dataFinal @this" update="valor" global="false" />
-				</p:calendar>
-
-				<p:calendar id="dataFinal" required="true" requiredMessage="Data Final: Valor obrigatório" value="#{agendaFaces.crudModel.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="16">
-					<p:ajax event="change" listener="#{agendaFaces.atualizarComboOperacoes}" process="dataInicial @this" update="equipamento operador" global="false" />
-					<p:ajax event="change" listener="#{agendaFaces.atualizarValorAgenda}" process="tipoServico dataInicial dataFinal @this" update="valor" global="false" />
+					
 				</p:calendar>
 
 				<p:selectOneMenu id="equipamento" value="#{agendaFaces.crudModel.equipamento.id}" required="true" requiredMessage="Equipamento: Campo obrigatório" style="width:98%">
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-					<f:selectItems value="#{agendaFaces.comboEquipamentos}" />
-					<p:ajax event="change" listener="#{agendaFaces.atualizarValorAgenda}" process="tipoServico dataInicial dataFinal @this" update="valor" global="false" />
-				</p:selectOneMenu>
-
-				<p:selectOneMenu id="operador" value="#{agendaFaces.crudModel.operador.id}" required="true" requiredMessage="Operador: Campo obrigatório" style="width:98%">
-					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-					<f:selectItems value="#{agendaFaces.comboOperadores}" />
-				</p:selectOneMenu>
-
-				<p:inputText id="valor" style="width: 95%; text-align: right" value="#{agendaFaces.crudModel.valor}" onkeyup="return mascaraMoeda(this)">
-					<f:convertNumber type="number" pattern="#,###,##0.##" locale="pt_BR" minFractionDigits="2" maxFractionDigits="2" />
-				</p:inputText>
+					<f:selectItems value="#{agendaFaces.comboEquipamentosPesquisa}" />					
+				</p:selectOneMenu>				
 
 			</h:panelGrid>
 
 			<p:outputLabel for="obs" value="Observação" />
 			<p:inputTextarea id="obs" rows="" maxlength="1000" value="#{agendaFaces.crudModel.observacao}" styleClass="coluna99" />
-
-			<p:selectBooleanCheckbox id="ativo" value="#{agendaFaces.crudModel.flagConcluido}" itemLabel="Concluído?" />
+			
 
 			<br />
 
@@ -103,7 +82,7 @@
 						</p:column>
 
 						<p:column headerText="Operador" styleClass="coluna25">
-							<p:selectOneMenu id="operadorMedicao" value="#{linha.operadorTemp.id}" required="true" requiredMessage="Operador Medição #{i}: Campo obrigatório" style="width:98%">
+							<p:selectOneMenu id="operadorMedicao" value="#{linha.operador.id}" required="true" requiredMessage="Operador Medição #{i}: Campo obrigatório" style="width:98%">
 								<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 								<f:selectItems value="#{agendaFaces.comboOperadoresPesquisa}" />
 							</p:selectOneMenu>
@@ -184,12 +163,12 @@
 
 						</p:commandLink>
 					</p:column>
-						
+
 				</p:dataTable>
 
 			</p:outputPanel>
 
-			<p:commandButton value="Salvar" icon="salvar" action="#{financeiroFaces.atualizarSituacao}" style="width: 110px;" global="false" oncomplete="handleRequest2(parcialDialog, args);" process="painelParcial" update=":tabview:formPesquisa"/>
+			<p:commandButton value="Salvar" icon="salvar" action="#{financeiroFaces.atualizarSituacao}" style="width: 110px;" global="false" oncomplete="handleRequest2(parcialDialog, args);" process="painelParcial" update=":tabview:formPesquisa" />
 
 		</h:panelGrid>
 

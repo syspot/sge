@@ -45,8 +45,7 @@ public class RelatorioFaces extends TSMainFaces {
 		agendaSelecionada = new Agenda();
 		agendaSelecionada.setEquipamento(new Equipamento());
 		agendaSelecionada.setContrato(new Contrato());		
-		agendaSelecionada.getContrato().setCliente(new Cliente());
-		agendaSelecionada.setOperador(new Operador());
+		agendaSelecionada.getContrato().setCliente(new Cliente());		
 		this.comboClientes = super.initCombo(new Cliente(Boolean.TRUE).findByModel("nome"), "id", "nome");
 		this.comboOperadores = super.initCombo(new Operador(Boolean.TRUE).findByModel("nome"), "id", "nome");
 		this.comboEquipamentos = super.initCombo(new Equipamento(Boolean.TRUE).findByModel("descricao"), "id", "descricao");
@@ -64,7 +63,7 @@ public class RelatorioFaces extends TSMainFaces {
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 
@@ -88,13 +87,13 @@ public class RelatorioFaces extends TSMainFaces {
 
 			Map<String, Object> parametros = new HashMap<String, Object>();
 
-			parametros.put("OPERADOR_ID", this.agendaSelecionada.getOperador().getId());
+			//parametros.put("OPERADOR_ID", this.agendaSelecionada.getOperador().getId());
 			
 			parametros.put("CONTRATO_ID", this.agendaSelecionada.getContrato().getId());			
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 
@@ -123,7 +122,7 @@ public class RelatorioFaces extends TSMainFaces {
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 
@@ -155,7 +154,7 @@ public class RelatorioFaces extends TSMainFaces {
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 
@@ -185,7 +184,7 @@ public class RelatorioFaces extends TSMainFaces {
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 

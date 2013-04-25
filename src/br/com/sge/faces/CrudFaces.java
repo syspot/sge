@@ -106,7 +106,7 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 		
 		this.posPersist();
 		
-		//this.limpar();
+		this.limpar();
 		
 		this.setDefaultMessage(Boolean.TRUE);
 		
@@ -134,7 +134,7 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 		
 		this.posPersist();
 		
-		//this.limpar();
+		this.limpar();
 		
 		this.setDefaultMessage(Boolean.TRUE);
 		

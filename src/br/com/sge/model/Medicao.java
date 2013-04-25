@@ -1,6 +1,9 @@
 package br.com.sge.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,9 +36,6 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 	@JoinColumn(name = "operador_id")
 	private Operador operador;
 
-	@Transient
-	private Operador operadorTemp;
-
 	@Column(name = "data_inicial")
 	private Date dataInicial;
 
@@ -47,6 +47,12 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 	private String observacao;
 
 	public Medicao() {
+
+	}
+	
+	public Medicao(Agenda agenda) {
+		
+		this.agenda = agenda;
 
 	}
 
@@ -96,6 +102,34 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 
 	public void setAgenda(Agenda agenda) {
 		this.agenda = agenda;
+	}
+	
+	@Override
+	public List<Medicao> findByModel(String... fieldsOrderBy) {
+		return findByModel(null, fieldsOrderBy);
+	}
+
+	
+	@Override
+	public List<Medicao> findByModel(Map<String, Object> map, String... fieldsOrderBy) {
+
+		StringBuilder query = new StringBuilder();
+
+		query.append(" from Medicao m where 1=1 ");
+		
+		if (!TSUtil.isEmpty(agenda) && !TSUtil.isEmpty(agenda.getId())) {
+			query.append("and m.agenda.id = ? ");
+		} else {
+			query.append("and m.agenda.id is null");
+		}
+		
+		List<Object> params = new ArrayList<Object>();
+
+		if (!TSUtil.isEmpty(agenda) && !TSUtil.isEmpty(agenda.getId())) {
+			params.add(agenda.getId());
+		}
+		
+		return super.find(query.toString(), "m.dataInicial, m.id", params.toArray());
 	}
 
 	@Override
@@ -151,14 +185,6 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 		} else if (!valor.equals(other.valor))
 			return false;
 		return true;
-	}
-
-	public Operador getOperadorTemp() {
-		return operadorTemp;
-	}
-
-	public void setOperadorTemp(Operador operadorTemp) {
-		this.operadorTemp = operadorTemp;
 	}
 
 	public String getObservacao() {
