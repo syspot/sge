@@ -21,6 +21,8 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 	
 	private String fieldOrdem;
 	
+	private Boolean naoPesquisar;
+	
 	private Map<String, Object> map;
 	
 	public String getFieldOrdem() {
@@ -153,6 +155,10 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 		
 		posDelete();
 		
+		if (naoPesquisar) {
+			return null;
+		}
+		
 		return find();
 		
 	}
@@ -229,6 +235,14 @@ public abstract class CrudFaces <T extends TSActiveRecordIf<T>> extends TSMainFa
 
 	public void setMap(Map<String, Object> map) {
 		this.map = map;
+	}
+
+	public Boolean getNaoPesquisar() {
+		return naoPesquisar;
+	}
+
+	public void setNaoPesquisar(Boolean naoPesquisar) {
+		this.naoPesquisar = naoPesquisar;
 	}
 	
 }

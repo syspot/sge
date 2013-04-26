@@ -40,6 +40,7 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 	@PostConstruct
 	protected void init() {
 		this.clearFields();
+		setNaoPesquisar(Boolean.TRUE);
 		this.comboTiposServicos = super.initCombo(new TipoServico().findByModel("descricao"), "id", "descricao");
 		this.comboClientes = super.initCombo(new Cliente(Boolean.TRUE).findByModel("nome"), "id", "nome");
 		this.comboOperadoresPesquisa = super.initCombo(new Operador(Boolean.TRUE).findByModel("nome"), "id", "nome");
@@ -109,12 +110,16 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 
 	public String pesquisarBaseadoEquipamentos() {
 
-		setGrid(getCrudPesquisaModel().pesquisarBaseadoEquipamentos());
+		if (!TSUtil.isEmpty(getCrudPesquisaModel().getDataInicial())) {
 
-		if (TSUtil.isEmpty(getGrid())) {
-			setGrid(new ArrayList<Agenda>());
-		} else {
-			posDetail();
+			setGrid(getCrudPesquisaModel().pesquisarBaseadoEquipamentos());
+
+			if (TSUtil.isEmpty(getGrid())) {
+				setGrid(new ArrayList<Agenda>());
+			} else {
+				posDetail();
+			}
+
 		}
 
 		return null;
@@ -134,6 +139,12 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 		if (!TSUtil.isEmpty(getGrid())) {
 			setCrudModel(getGrid().get(0));
 		}
+
+	}
+
+	protected void posDelete() {
+
+		pesquisarBaseadoEquipamentos();
 
 	}
 

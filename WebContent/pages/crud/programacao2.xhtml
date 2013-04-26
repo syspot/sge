@@ -54,7 +54,16 @@
 						<div align="center">
 							<p:commandLink id="clSelecionar" update="gridAgenda @form">
 								<h:graphicImage value="../resources/images/lupa.png" style="border: 0px;width: 16px; height: 16px" />
-								<f:setPropertyActionListener target="#{mbean.crudModel}" value="#{linha}" />
+								<f:setPropertyActionListener target="#{mbeanModel}" value="#{linha}" />
+							</p:commandLink>
+						</div>
+					</p:column>
+
+					<p:column styleClass="coluna3" rendered="#{autenticacaoFaces.permissaoSelecionada.flagExcluir}">
+						<div align="center">
+							<p:commandLink type="button" icon="delete16" id="clExcluir" onclick="cdExcluir.show()" global="false" rendered="#{!empty linha.id}">
+								<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+								<f:setPropertyActionListener target="#{mbeanModel.id}" value="#{linha.id}" />
 							</p:commandLink>
 						</div>
 					</p:column>
@@ -113,15 +122,11 @@
 							</p:outputPanel>
 						</p:column>
 
-						<p:column headerText="Excluir" styleClass="coluna5" rendered="false">
-
+						<p:column headerText="Excluir" styleClass="coluna5">
 							<div align="center">
-
-								<p:commandLink action="#{agendaFaces.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update=":formDialog:fsMedicao gridMedicao" global="false">
-
+								<p:commandLink action="#{mbean.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update="@form" global="false">
 									<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
 									<f:setPropertyActionListener target="#{agendaFaces.medicaoSelecionada}" value="#{linha}" />
-
 								</p:commandLink>
 
 							</div>
@@ -135,6 +140,8 @@
 			</p:panel>
 
 		</h:panelGrid>
+		
+		<ui:include src="../../resources/templates/dialogCRUD.xhtml" />
 
 	</h:form>
 
