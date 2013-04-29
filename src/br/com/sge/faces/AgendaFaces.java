@@ -75,6 +75,19 @@ public class AgendaFaces extends CrudFaces<Agenda> {
 	public void atualizarValorMedicao(Medicao medicao) {
 
 		medicao.setValor(calcularValor(medicao.getDataInicial(), medicao.getDataFinal()));
+
+		if (!TSUtil.isEmpty(medicao.getDataInicial2()) && !TSUtil.isEmpty(medicao.getDataFinal2())) {
+
+			Double medicao2 = calcularValor(medicao.getDataInicial2(), medicao.getDataFinal2());
+
+			if (!TSUtil.isEmpty(medicao2)) {
+
+				medicao.setValor(medicao.getValor() + medicao2);
+
+			}
+
+		}
+
 	}
 
 	public Double calcularValor(Date dataInicial, Date dataFinal) {

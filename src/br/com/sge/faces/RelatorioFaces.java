@@ -63,7 +63,7 @@ public class RelatorioFaces extends TSMainFaces {
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 
@@ -81,19 +81,49 @@ public class RelatorioFaces extends TSMainFaces {
 
 	}
 	
+	public String imprimirMedicaoTipoEquipamento() {
+
+		try {
+
+			Map<String, Object> parametros = new HashMap<String, Object>();
+
+			parametros.put("CLIENTE_ID", this.agendaSelecionada.getContrato().getCliente().getId());
+			
+			parametros.put("CONTRATO_ID", this.agendaSelecionada.getContrato().getId());			
+
+			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
+			
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
+
+			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
+
+			JasperUtil jasperUtil = new JasperUtil();
+
+			jasperUtil.gerarRelatorio("medicaoTipoEquipamentoCliente.jasper", parametros);
+
+
+		} catch (Exception ex) {
+			this.addErrorMessage("Erro ao imprimir, contate o administrador do sistema");
+			ex.printStackTrace();
+		}
+
+		return SUCESSO;
+
+	}
+	
 	public String imprimirMedicaoOperador() {
 
 		try {
 
 			Map<String, Object> parametros = new HashMap<String, Object>();
 
-			//parametros.put("OPERADOR_ID", this.agendaSelecionada.getOperador().getId());
+			parametros.put("OPERADOR_ID", this.agendaSelecionada.getOperador());
 			
 			parametros.put("CONTRATO_ID", this.agendaSelecionada.getContrato().getId());			
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 
@@ -122,7 +152,7 @@ public class RelatorioFaces extends TSMainFaces {
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 
@@ -154,7 +184,7 @@ public class RelatorioFaces extends TSMainFaces {
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 
@@ -184,7 +214,7 @@ public class RelatorioFaces extends TSMainFaces {
 
 			parametros.put("DATA_INICIAL", this.agendaSelecionada.getDataInicial());
 			
-			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataInicial());
+			parametros.put("DATA_FINAL", this.agendaSelecionada.getDataFinal());
 
 			parametros.put("SUBREPORT_DIR", TSFacesUtil.getServletContext().getRealPath("WEB-INF" + File.separator + Constantes.PASTA_RELATORIO) + File.separator);
 

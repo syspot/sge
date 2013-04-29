@@ -135,7 +135,7 @@
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement/>
-				<text><![CDATA[Agenda]]></text>
+				<text><![CDATA[Prog.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="125" y="15" width="284" height="20"/>

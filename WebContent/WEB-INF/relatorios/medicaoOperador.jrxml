@@ -31,8 +31,9 @@
        o.nome operador,
        am.id medicao_id,
        am.data_inicial data_medicao_inicial,
-       am.data_final data_medicao_final,
-       greatest(EXTRACT(HOURS FROM (am.data_final - am.data_inicial)),1) * o.valor_hora valor_medicao
+       coalesce(am.data_final2, am.data_final) data_medicao_final,
+       (greatest(EXTRACT(HOURS FROM (am.data_final - am.data_inicial)),1) * o.valor_hora) +
+       (greatest(EXTRACT(HOURS FROM (am.data_final2 - am.data_inicial2)),0) * o.valor_hora) valor_medicao
   from agenda a, contrato c, agenda_medicao am, operador o, equipamento e
  where a.id = am.agenda_id
    and a.contrato_id = c.id
@@ -42,8 +43,7 @@
    and o.id = $P{OPERADOR_ID}
    and c.cliente_id = coalesce($P{CLIENTE_ID}, c.cliente_id)
    and c.id = coalesce($P{CONTRATO_ID}, c.id)
-order by c.descricao, a.id, am.data_inicial
-]]>
+order by c.descricao, a.id, am.data_inicial]]>
 	</queryString>
 	<field name="agenda_id" class="java.lang.Long"/>
 	<field name="contrato_id" class="java.lang.Long"/>
@@ -69,7 +69,7 @@ order by c.descricao, a.id, am.data_inicial
 				<staticText>
 					<reportElement x="13" y="27" width="47" height="20"/>
 					<textElement/>
-					<text><![CDATA[Agenda]]></text>
+					<text><![CDATA[Prog.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="60" y="27" width="101" height="20"/>

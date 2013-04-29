@@ -57,6 +57,12 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 	
 	@Transient
 	private Long sequencia;
+	
+	@Transient
+	private Date dataFinal;
+	
+	@Transient
+	private Long operador;
 
 	public Agenda() {
 
@@ -179,7 +185,7 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 
 		TSDataBaseBrokerIf dataBaseBrokerIf = TSDataBaseBrokerFactory.getDataBaseBrokerIf();
 
-		String query = "SELECT ROW_NUMBER() OVER (PARTITION by 0), A.ID, A.TIPO_SERVICO_ID, COALESCE(A.DATA_INICIAL, ?), (SELECT CT.CLIENTE_ID FROM CONTRATO CT WHERE CT.ID = A.CONTRATO_ID), A.CONTRATO_ID, E.ID EQUIPAMENTO_ID, A.OBSERVACAO FROM EQUIPAMENTO E LEFT OUTER JOIN AGENDA A ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ? ORDER BY ID";
+		String query = "SELECT ROW_NUMBER() OVER (PARTITION by 0), A.ID, A.TIPO_SERVICO_ID, COALESCE(A.DATA_INICIAL, ?), (SELECT CT.CLIENTE_ID FROM CONTRATO CT WHERE CT.ID = A.CONTRATO_ID), A.CONTRATO_ID, E.ID EQUIPAMENTO_ID, A.OBSERVACAO FROM EQUIPAMENTO E LEFT OUTER JOIN AGENDA A ON E.ID = A.EQUIPAMENTO_ID AND A.DATA_INICIAL = ? ORDER BY E.DESCRICAO, A.ID";
 
 		dataBaseBrokerIf.setSQL(query, dataInicial, dataInicial);
 		List<Agenda> a = dataBaseBrokerIf.getCollectionBean(Agenda.class, "sequencia", "id", "tipoServico.id", "dataInicial", "contrato.cliente.id", "contrato.id", "equipamento.id", "observacao");
@@ -261,6 +267,22 @@ public class Agenda extends TSActiveRecordAb<Agenda> {
 		} else if (!tipoServico.equals(other.tipoServico))
 			return false;
 		return true;
+	}
+
+	public Date getDataFinal() {
+		return dataFinal;
+	}
+
+	public void setDataFinal(Date dataFinal) {
+		this.dataFinal = dataFinal;
+	}
+
+	public Long getOperador() {
+		return operador;
+	}
+
+	public void setOperador(Long operador) {
+		this.operador = operador;
 	}
 
 	

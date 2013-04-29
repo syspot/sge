@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import br.com.topsys.database.hibernate.TSActiveRecordAb;
 import br.com.topsys.util.TSUtil;
@@ -41,6 +40,12 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 
 	@Column(name = "data_final")
 	private Date dataFinal;
+	
+	@Column(name = "data_inicial2")
+	private Date dataInicial2;
+
+	@Column(name = "data_final2")
+	private Date dataFinal2;	
 
 	private Double valor;
 	
@@ -193,5 +198,21 @@ public class Medicao extends TSActiveRecordAb<Medicao> {
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+
+	public Date getDataInicial2() {
+		return dataInicial2;
+	}
+
+	public void setDataInicial2(Date dataInicial2) {
+		this.dataInicial2 = dataInicial2;
+	}
+
+	public Date getDataFinal2() {
+		return dataFinal2;
+	}
+
+	public void setDataFinal2(Date dataFinal2) {
+		this.dataFinal2 = dataFinal2;
 	}
 }

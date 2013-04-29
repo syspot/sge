@@ -31,8 +31,9 @@
        o.nome operador,
        am.id medicao_id,
        am.data_inicial data_medicao_inicial,
-       am.data_final data_medicao_final,
-       greatest(EXTRACT(HOURS FROM (am.data_final - am.data_inicial)),1) * o.valor_hora valor_medicao
+       coalesce(am.data_final2, am.data_final) data_medicao_final,
+       (greatest(EXTRACT(HOURS FROM (am.data_final - am.data_inicial)),1) * o.valor_hora) +
+       (greatest(EXTRACT(HOURS FROM (am.data_final2 - am.data_inicial2)),0) * o.valor_hora) valor_medicao
   from agenda a, contrato c, agenda_medicao am, operador o, equipamento e
  where a.id = am.agenda_id
    and a.contrato_id = c.id

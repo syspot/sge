@@ -21,7 +21,6 @@
 	<queryString>
 		<![CDATA[select a.id agenda_id,
        a.data_inicial data_agenda_inicial,
-       a.data_final data_agenda_final,
        cl.nome cliente,
        c.id contrato_id,
        c.descricao contrato,
@@ -29,7 +28,7 @@
        e.descricao equipamento,
        m.id medicao_id,
        m.data_inicial data_medicao_inicial,
-       m.data_final data_medicao_final,
+       coalesce(m.data_final2, m.data_final) data_medicao_final,
        o.id operador_id,
        o.nome operador,
        m.valor valor_medicao
@@ -45,7 +44,6 @@
 	</queryString>
 	<field name="agenda_id" class="java.lang.Long"/>
 	<field name="data_agenda_inicial" class="java.sql.Timestamp"/>
-	<field name="data_agenda_final" class="java.sql.Timestamp"/>
 	<field name="cliente" class="java.lang.String"/>
 	<field name="contrato_id" class="java.lang.Long"/>
 	<field name="contrato" class="java.lang.String"/>
@@ -109,7 +107,7 @@
 				<staticText>
 					<reportElement x="13" y="0" width="47" height="20"/>
 					<textElement/>
-					<text><![CDATA[Agenda]]></text>
+					<text><![CDATA[Prog.]]></text>
 				</staticText>
 				<textField>
 					<reportElement x="13" y="20" width="47" height="20"/>
@@ -119,30 +117,20 @@
 				<staticText>
 					<reportElement x="60" y="0" width="101" height="20"/>
 					<textElement/>
-					<text><![CDATA[De]]></text>
+					<text><![CDATA[Data]]></text>
 				</staticText>
 				<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
 					<reportElement x="60" y="20" width="101" height="20"/>
 					<textElement/>
 					<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{data_agenda_inicial}]]></textFieldExpression>
 				</textField>
-				<textField pattern="dd/MM/yyyy HH:mm">
-					<reportElement x="161" y="20" width="101" height="20"/>
-					<textElement/>
-					<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{data_agenda_final}]]></textFieldExpression>
-				</textField>
 				<staticText>
-					<reportElement x="262" y="0" width="293" height="20"/>
+					<reportElement x="161" y="0" width="394" height="20"/>
 					<textElement/>
 					<text><![CDATA[Equipamento]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="161" y="0" width="101" height="20"/>
-					<textElement/>
-					<text><![CDATA[Até]]></text>
-				</staticText>
 				<textField>
-					<reportElement x="262" y="20" width="293" height="20"/>
+					<reportElement x="161" y="20" width="394" height="20"/>
 					<textElement/>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{equipamento}]]></textFieldExpression>
 				</textField>

@@ -57,25 +57,39 @@
 
 					<p:dataTable id="gridMedicao" value="#{agendaFaces.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" paginator="true" rows="3" paginatorAlwaysVisible="false" rowIndexVar="i">
 
-						<p:column headerText="#">
+						<p:column headerText="#" rendered="false">
         					#{i+1}
     					</p:column>
 
-						<p:column headerText="Código" styleClass="coluna5">
+						<p:column headerText="Código" styleClass="coluna5" rendered="false">
 							<div align="center">
 								<h:outputText value="#{linha.id}" />
 							</div>
 						</p:column>
 
-						<p:column headerText="Data Inicial" styleClass="coluna15">
+						<p:column headerText="Data Inicial 1" styleClass="coluna10">
 							<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Inicial Medição #{i}: Campo obrigatório">
 								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
 							</p:calendar>
 						</p:column>
 
-						<p:column headerText="Data Final" styleClass="coluna15">
+						<p:column headerText="Data Final 1" styleClass="coluna10">
 
 							<p:calendar value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Final Medição #{i}: Campo obrigatório">
+								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+							</p:calendar>
+
+						</p:column>
+						
+						<p:column headerText="Data Inicial 2" styleClass="coluna10">
+							<p:calendar value="#{linha.dataInicial2}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Inicial Medição #{i}: Campo obrigatório">
+								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+							</p:calendar>
+						</p:column>
+
+						<p:column headerText="Data Final 2" styleClass="coluna10">
+
+							<p:calendar value="#{linha.dataFinal2}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Final Medição #{i}: Campo obrigatório">
 								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
 							</p:calendar>
 
@@ -100,7 +114,7 @@
 							</p:outputPanel>
 						</p:column>
 
-						<p:column headerText="Excluir" styleClass="coluna5">
+						<p:column headerText="Excluir" styleClass="coluna5" rendered="false">
 
 							<div align="center">
 

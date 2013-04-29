@@ -19,6 +19,10 @@
 
 				<p:dataTable rowStyleClass="#{linha.sequencia == mbean.crudModel.sequencia? mbean.laranja:null}" style="width: 99%" id="gridAgenda" value="#{mbean.grid}" var="linha" emptyMessage="Nenhum registro encontrado" rowIndexVar="i">
 
+					<p:column headerText="#" styleClass="coluna3">
+        					<h:outputText value="#{linha.id}"/>
+    				</p:column>
+
 					<p:column headerText="Equipamento" styleClass="coluna30">
 						<h:selectOneMenu value="#{linha.equipamento.id}" style="width:99%;padding: 3px">
 							<f:selectItem itemLabel="Não Selecionado" itemValue="" />
@@ -83,19 +87,15 @@
 
 				<p:scrollPanel mode="native" style="width: 99.5%; height: 130px">
 
-					<p:dataTable id="gridMedicao" value="#{mbean.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" rowIndexVar="i">
+					<p:dataTable id="gridMedicao" value="#{mbean.crudModel.medicoes}" var="linha" style="width: 100%" emptyMessage="Não existe lançamento de medição" rowIndexVar="i">						
 
-						<p:column headerText="#">
-        					#{i+1}
-    					</p:column>
-
-						<p:column headerText="Data Inicial" styleClass="coluna15">
+						<p:column headerText="Data Inicial 1" styleClass="coluna10">
 							<p:calendar value="#{linha.dataInicial}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Inicial Medição #{i}: Campo obrigatório">
 								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
 							</p:calendar>
 						</p:column>
 
-						<p:column headerText="Data Final" styleClass="coluna15">
+						<p:column headerText="Data Final 1" styleClass="coluna10">
 
 							<p:calendar value="#{linha.dataFinal}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15" required="true" requiredMessage="Data Final Medição #{i}: Campo obrigatório">
 								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
@@ -103,14 +103,28 @@
 
 						</p:column>
 
-						<p:column headerText="Operador" styleClass="coluna25">
+						<p:column headerText="Data Inicial 2" styleClass="coluna10">
+							<p:calendar value="#{linha.dataInicial2}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15">
+								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+							</p:calendar>
+						</p:column>
+
+						<p:column headerText="Data Final 2" styleClass="coluna10">
+
+							<p:calendar value="#{linha.dataFinal2}" navigator="true" pattern="dd/MM/yyyy HH:mm" size="15">
+								<p:ajax event="change" listener="#{agendaFaces.atualizarValorMedicao(linha)}" update="teste" global="false" />
+							</p:calendar>
+
+						</p:column>
+
+						<p:column headerText="Operador" styleClass="coluna20">
 							<h:selectOneMenu id="operadorMedicao" value="#{linha.operador.id}" required="true" requiredMessage="Operador Medição #{i}: Campo obrigatório" style="padding: 3px; width:98%">
 								<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 								<f:selectItems value="#{agendaFaces.comboOperadoresPesquisa}" />
 							</h:selectOneMenu>
 						</p:column>
 
-						<p:column headerText="Obs." styleClass="coluna35">
+						<p:column headerText="Obs." styleClass="coluna25">
 							<p:inputText value="#{linha.observacao}" style="width: 95%" />
 						</p:column>
 
@@ -122,7 +136,7 @@
 							</p:outputPanel>
 						</p:column>
 
-						<p:column headerText="Excluir" styleClass="coluna5">
+						<p:column styleClass="coluna3">
 							<div align="center">
 								<p:commandLink action="#{mbean.excluirMedicao}" icon="delete16" id="clExcluir" process="@this" update="@form" global="false">
 									<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
@@ -140,7 +154,7 @@
 			</p:panel>
 
 		</h:panelGrid>
-		
+
 		<ui:include src="../../resources/templates/dialogCRUD.xhtml" />
 
 	</h:form>

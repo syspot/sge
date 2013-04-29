@@ -20,16 +20,9 @@
 
 				</h:panelGrid>
 
-				<p:outputLabel for="operador" value="Operador" />
-
-				<p:selectOneMenu id="operador" value="#{mbeanModel.operador}" required="true" requiredMessage="Operador: Campo obrigatório" style="width:50%">
-					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
-					<f:selectItems value="#{mbean.comboOperadores}" />
-				</p:selectOneMenu>
-
 				<p:outputLabel for="cliente" value="Cliente" />
 
-				<p:selectOneMenu id="cliente" value="#{mbeanModel.contrato.cliente.id}" style="width:50%">
+				<p:selectOneMenu id="cliente" value="#{mbeanModel.contrato.cliente.id}" style="width:50%" required="true" requiredMessage="Cliente: Valor obrigatório" >
 					<f:selectItem itemLabel="Não Selecionado" itemValue="" />
 					<f:selectItems value="#{mbean.comboClientes}" />
 					<p:ajax event="change" listener="#{mbean.atualizarContratos}" update="contrato" global="false" />
@@ -42,7 +35,7 @@
 					<f:selectItems value="#{mbeanModel.contrato.cliente.contratos}" var="i" itemLabel="#{i.descricao}" itemValue="#{i.id}" />
 				</p:selectOneMenu>
 
-				<p:commandButton ajax="false" id="btnImprimir" value="Imprimir" icon="ui-icon-print" onclick="this.form.target='_blank';" onmouseout="this.form.target='';" action="#{mbean.imprimirMedicaoOperador}" />
+				<p:commandButton ajax="false" id="btnImprimir" value="Imprimir" icon="ui-icon-print" onclick="this.form.target='_blank';" onmouseout="this.form.target='';" action="#{mbean.imprimirMedicaoTipoEquipamento}" />
 
 			</h:panelGrid>
 
